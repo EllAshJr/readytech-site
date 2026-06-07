@@ -1,0 +1,18 @@
+{
+  "name": "readytech-site",
+  "version": "1.0.0",
+  "description": "ReadyTech website for secure networking, managed VPN, private cloud, backup internet, monitoring, and restaurant technology services.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^6.0.1",
+    "express": "^5.2.1"
+  }
+}

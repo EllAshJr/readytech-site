@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main class="container section">
+      <p class="eyebrow">Austin • Manor • Houston</p>
+      <h1><%= service.title %></h1>
+
+      <p><%= service.description %></p>
+
+      <section class="card">
+        <h2>Who This Is For</h2>
+        <p>
+          This service is built for small businesses, remote workers, home
+          offices, and teams that need secure and reliable infrastructure
+          without hiring a full internal IT department.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Common Use Cases</h2>
+        <ul>
+          <li>Secure remote access</li>
+          <li>Small business network protection</li>
+          <li>Internet uptime and failover</li>
+          <li>Private business data storage</li>
+          <li>Monitoring and support for critical devices</li>
+        </ul>
+      </section>
+
+      <a href="/contact" class="button">Request Help</a>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

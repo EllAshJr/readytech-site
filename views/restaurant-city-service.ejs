@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main class="container section">
+      <p class="eyebrow">Restaurant Technology in <%= city.name %>, <%= city.state %></p>
+
+      <h1><%= restaurantService.title %> in <%= city.name %>, <%= city.state %></h1>
+
+      <p class="lead"><%= restaurantService.description %></p>
+
+      <section class="card">
+        <h2>Restaurant Technology Support for <%= city.name %></h2>
+        <p><%= restaurantData.positioning %></p>
+
+        <ul>
+          <% restaurantService.highlights.forEach(function(item) { %>
+            <li><%= item %></li>
+          <% }) %>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Related Restaurant Services</h2>
+
+        <div class="link-grid">
+          <% Object.keys(restaurantData.seoServices).forEach(function(serviceSlug) { %>
+            <a href="/<%= Object.keys(restaurantData.cities).find(key => restaurantData.cities[key].name === city.name) %>/<%= serviceSlug %>" class="mini-link">
+              <%= restaurantData.seoServices[serviceSlug].title %>
+            </a>
+          <% }) %>
+        </div>
+      </section>
+
+      <a href="/contact" class="button">Request Restaurant Technology Help</a>
+      <a href="/services/restaurant-technology" class="button secondary">View Packages</a>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

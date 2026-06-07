@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main class="container section">
+      <h1>Contact Private Infrastructure Support</h1>
+      <p>
+        Request help with managed VPN, private cloud, network monitoring,
+        business Wi-Fi, or backup internet.
+      </p>
+
+      <form action="/contact" method="POST" class="contact-form">
+        <label>
+          Name
+          <input type="text" name="name" required />
+        </label>
+
+        <label>
+          Email
+          <input type="email" name="email" required />
+        </label>
+
+        <label>
+          City
+          <select name="city">
+            <option>Austin</option>
+            <option>Manor</option>
+            <option>Houston</option>
+            <option>Other</option>
+          </select>
+        </label>
+
+        <label>
+          What do you need?
+          <textarea name="message" rows="6" required></textarea>
+        </label>
+
+        <button type="submit" class="button">Send Request</button>
+      </form>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

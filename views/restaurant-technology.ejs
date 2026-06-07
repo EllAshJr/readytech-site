@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main class="restaurant-page">
+      <section class="hero">
+        <div class="container">
+          <p class="eyebrow">Restaurant Technology Service Line</p>
+          <h1><%= restaurantData.title %></h1>
+          <p><%= restaurantData.positioning %></p>
+
+          <div class="hero-actions">
+            <a href="/contact" class="button">Request Restaurant Tech Help</a>
+            <a href="#health-check" class="button secondary">Start With a Health Check</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="container section">
+        <p class="service-note">
+          This is a focused service offered under the larger ReadyTech model.
+          It does not include sound system installation, TV installation, or
+          standalone digital signage installation.
+        </p>
+
+        <h2>Core Restaurant Infrastructure</h2>
+
+        <div class="grid restaurant-wide-grid restaurant-no-scroll-grid">
+          <% restaurantData.coreServices.forEach(function(service) { %>
+            <article class="card service-card">
+              <h3><%= service.name %></h3>
+              <p><%= service.description %></p>
+
+              <h4>Includes</h4>
+              <ul>
+                <% service.includes.forEach(function(item) { %>
+                  <li><%= item %></li>
+                <% }); %>
+              </ul>
+
+              <table class="pricing-table">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Setup / Price</th>
+                    <th>Monthly</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% service.pricing.forEach(function(row) { %>
+                    <tr>
+                      <td><%= row.service %></td>
+                      <td><%= row.setup %></td>
+                      <td><%= row.monthly %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section">
+        <h2>POS, Menus & Delivery Operations</h2>
+
+        <div class="grid">
+          <% restaurantData.operationsServices.forEach(function(service) { %>
+            <article class="card service-card">
+              <h3><%= service.name %></h3>
+              <p><%= service.description %></p>
+
+              <h4>Includes</h4>
+              <ul>
+                <% service.includes.forEach(function(item) { %>
+                  <li><%= item %></li>
+                <% }); %>
+              </ul>
+
+              <table class="pricing-table">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Setup / Price</th>
+                    <th>Monthly</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% service.pricing.forEach(function(row) { %>
+                    <tr>
+                      <td><%= row.service %></td>
+                      <td><%= row.setup %></td>
+                      <td><%= row.monthly %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section">
+        <h2>Customer Experience & Retention</h2>
+
+        <div class="grid restaurant-wide-grid restaurant-no-scroll-grid customer-experience-grid">
+          <% restaurantData.customerExperienceServices.forEach(function(service) { %>
+            <article class="card service-card">
+              <h3><%= service.name %></h3>
+              <p><%= service.description %></p>
+
+              <h4>Includes</h4>
+              <ul>
+                <% service.includes.forEach(function(item) { %>
+                  <li><%= item %></li>
+                <% }); %>
+              </ul>
+
+              <table class="pricing-table">
+                <thead>
+                  <tr>
+                    <th>Service</th>
+                    <th>Setup / Price</th>
+                    <th>Monthly</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% service.pricing.forEach(function(row) { %>
+                    <tr>
+                      <td><%= row.service %></td>
+                      <td><%= row.setup %></td>
+                      <td><%= row.monthly %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section">
+        <h2>Restaurant Monitoring</h2>
+
+        <% restaurantData.monitoringServices.forEach(function(service) { %>
+          <article class="card service-card">
+            <h3><%= service.name %></h3>
+            <p><%= service.description %></p>
+
+            <h4>Monitored Items</h4>
+            <ul>
+              <% service.includes.forEach(function(item) { %>
+                <li><%= item %></li>
+              <% }); %>
+            </ul>
+
+            <table class="pricing-table">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Setup / Price</th>
+                  <th>Monthly</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% service.pricing.forEach(function(row) { %>
+                  <tr>
+                    <td><%= row.service %></td>
+                    <td><%= row.setup %></td>
+                    <td><%= row.monthly %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </article>
+        <% }); %>
+      </section>
+
+      <section class="container section">
+        <h2>Restaurant Technology Packages</h2>
+
+        <div class="pricing-grid">
+          <% restaurantData.packages.forEach(function(pkg) { %>
+            <article class="price-card">
+              <h3><%= pkg.name %></h3>
+              <p><%= pkg.description %></p>
+              <p><strong>Setup:</strong> <%= pkg.setup %></p>
+              <p><strong>Monthly:</strong> <%= pkg.monthly %></p>
+
+              <ul>
+                <% pkg.includes.forEach(function(item) { %>
+                  <li><%= item %></li>
+                <% }); %>
+              </ul>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section id="health-check" class="container section">
+        <article class="card featured-panel">
+          <p class="eyebrow">Best Starting Offer</p>
+          <h2><%= restaurantData.healthCheck.name %></h2>
+          <p class="price"><%= restaurantData.healthCheck.price %></p>
+          <p><%= restaurantData.healthCheck.description %></p>
+
+          <h3>Inspection Areas</h3>
+          <ul class="columns">
+            <% restaurantData.healthCheck.inspect.forEach(function(item) { %>
+              <li><%= item %></li>
+            <% }); %>
+          </ul>
+
+          <h3>Report Sections</h3>
+          <ul class="columns">
+            <% restaurantData.healthCheck.reportSections.forEach(function(item) { %>
+              <li><%= item %></li>
+            <% }); %>
+          </ul>
+        </article>
+      </section>
+
+      <section class="container section">
+        <h2>Restaurant Service Pages</h2>
+        <p>
+          These pages help customers find specific restaurant technology services
+          in Austin, Manor, and Houston.
+        </p>
+
+        <div class="link-grid">
+          <% Object.keys(restaurantData.seoServices).forEach(function(slug) { %>
+            <a href="/services/<%= slug %>" class="mini-link">
+              <%= restaurantData.seoServices[slug].title %>
+            </a>
+          <% }); %>
+        </div>
+      </section>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

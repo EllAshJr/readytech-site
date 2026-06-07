@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main class="container section">
+      <h1>Private Infrastructure Services</h1>
+      <p>
+        Secure networking, managed VPN, private cloud, Wi-Fi, monitoring, and
+        internet continuity services for Austin, Manor, and Houston.
+      </p>
+
+      <div class="grid">
+        <% Object.keys(services).forEach(function(slug) { %>
+          <article class="card">
+            <h2><%= services[slug].title %></h2>
+            <p><%= services[slug].description %></p>
+            <a href="/services/<%= slug %>">Learn more</a>
+          </article>
+        <% }) %>
+      </div>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

@@ -1,0 +1,525 @@
+:root {
+  --bg: #0d1117;
+  --panel: #161b22;
+  --panel-light: #1f2937;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --accent: #38bdf8;
+  --border: #30363d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.container {
+  width: min(1100px, 92%);
+  margin: 0 auto;
+}
+
+.site-header {
+  background: #05070a;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: white;
+}
+
+nav {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+nav a:hover {
+  color: var(--accent);
+}
+
+.hero {
+  padding: 90px 0;
+  background:
+    linear-gradient(rgba(13, 17, 23, 0.7), rgba(13, 17, 23, 1)),
+    radial-gradient(circle at top right, #1e3a8a, transparent 35%);
+}
+
+.hero h1 {
+  max-width: 800px;
+  font-size: clamp(2.4rem, 6vw, 4.7rem);
+  line-height: 1.05;
+  margin: 0 0 20px;
+}
+
+.hero p {
+  max-width: 700px;
+  color: var(--muted);
+  font-size: 1.15rem;
+}
+
+.eyebrow {
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.hero-actions {
+  margin-top: 30px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.button {
+  display: inline-block;
+  background: var(--accent);
+  color: #031018;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.button.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.section {
+  padding: 60px 0;
+}
+
+.grid,
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.card,
+.price-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 22px;
+}
+
+.card h2,
+.card h3,
+.price-card h2 {
+  margin-top: 0;
+}
+
+.price-card.featured {
+  background: var(--panel-light);
+  border-color: var(--accent);
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: white;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+.contact-form {
+  max-width: 650px;
+  display: grid;
+  gap: 18px;
+  margin-top: 30px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  background: #05070a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+}
+
+.site-footer {
+  margin-top: 60px;
+  padding: 30px 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  background: #05070a;
+}
+
+@media (max-width: 760px) {
+  .nav {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.lead {
+  max-width: 850px;
+  color: var(--muted);
+  font-size: 1.15rem;
+}
+
+.service-note {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  padding: 18px;
+  border-radius: 10px;
+  color: var(--muted);
+}
+
+.service-card {
+  overflow-x: auto;
+}
+
+.service-card h4 {
+  margin-bottom: 8px;
+}
+
+.pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 18px;
+  font-size: 0.92rem;
+}
+
+.pricing-table th,
+.pricing-table td {
+  border: 1px solid var(--border);
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.pricing-table th {
+  background: #05070a;
+  color: white;
+}
+
+.pricing-table td {
+  color: var(--text);
+}
+
+.featured-panel {
+  background: var(--panel-light);
+  border-color: var(--accent);
+}
+
+.columns {
+  columns: 2;
+  column-gap: 40px;
+}
+
+.link-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.mini-link {
+  display: block;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.mini-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (max-width: 760px) {
+  .columns {
+    columns: 1;
+  }
+
+  .pricing-table {
+    font-size: 0.85rem;
+  }
+}
+
+/* Services page card alignment */
+.services-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
+  justify-content: center;
+}
+
+/* Restaurant technology page wider cards */
+.restaurant-wide-grid {
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+}
+
+/* Center Customer Experience & Retention cards */
+.customer-experience-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.customer-experience-grid > .card {
+  flex: 1 1 460px;
+  max-width: 540px;
+}
+
+/* Mobile protection */
+@media (max-width: 760px) {
+  .services-grid,
+  .restaurant-wide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-experience-grid > .card {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Restaurant Technology page: wider readable cards */
+.restaurant-page .container {
+  width: min(1440px, 96%);
+}
+
+/* Widen Core Restaurant Infrastructure and Customer Experience cards */
+.restaurant-page .restaurant-no-scroll-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr));
+  justify-content: center;
+  align-items: stretch;
+  gap: 28px;
+}
+
+/* Keep cards inside the page width */
+.restaurant-page .restaurant-no-scroll-grid > .card {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  overflow-x: visible;
+}
+
+/* Center Customer Experience cards, including Birthday Club / VIP Club and Guest Wi‑Fi Marketing */
+.restaurant-page .customer-experience-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 540px), 620px));
+  justify-content: center;
+}
+
+/* Prevent pricing tables from creating horizontal scrolling */
+.restaurant-page .restaurant-no-scroll-grid .pricing-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.restaurant-page .restaurant-no-scroll-grid .pricing-table th,
+.restaurant-page .restaurant-no-scroll-grid .pricing-table td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* Mobile layout */
+@media (max-width: 900px) {
+  .restaurant-page .restaurant-no-scroll-grid,
+  .restaurant-page .customer-experience-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table,
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table thead,
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table tbody,
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table th,
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td,
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table thead {
+    display: none;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table tr {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td {
+    border: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td:last-child {
+    border-bottom: none;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td:nth-child(1)::before {
+    content: "Service: ";
+    font-weight: 700;
+    color: white;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td:nth-child(2)::before {
+    content: "Setup / Price: ";
+    font-weight: 700;
+    color: white;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td:nth-child(3)::before {
+    content: "Monthly: ";
+    font-weight: 700;
+    color: white;
+  }
+}
+
+/* Restaurant Technology page: wider readable cards */
+.restaurant-page .container {
+  width: min(1440px, 96%);
+}
+
+/* Widen Core Restaurant Infrastructure and Customer Experience cards */
+.restaurant-page .restaurant-no-scroll-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr));
+  justify-content: center;
+  align-items: stretch;
+  gap: 28px;
+}
+
+/* Keep cards inside the page width */
+.restaurant-page .restaurant-no-scroll-grid > .card {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  overflow-x: visible;
+}
+
+/* Center Customer Experience cards, including Birthday Club / VIP Club and Guest Wi‑Fi Marketing */
+.restaurant-page .customer-experience-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 540px), 620px));
+  justify-content: center;
+}
+
+/* Prevent pricing tables from creating horizontal scrolling */
+.restaurant-page .restaurant-no-scroll-grid .pricing-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.restaurant-page .restaurant-no-scroll-grid .pricing-table th,
+.restaurant-page .restaurant-no-scroll-grid .pricing-table td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* Mobile layout */
+@media (max-width: 900px) {
+  .restaurant-page .restaurant-no-scroll-grid,
+  .restaurant-page .customer-experience-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table,
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table thead,
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table tbody,
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table th,
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td,
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table thead {
+    display: none;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table tr {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td {
+    border: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td:last-child {
+    border-bottom: none;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td:nth-child(1)::before {
+    content: "Service: ";
+    font-weight: 700;
+    color: white;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td:nth-child(2)::before {
+    content: "Setup / Price: ";
+    font-weight: 700;
+    color: white;
+  }
+
+  .restaurant-page .restaurant-no-scroll-grid .pricing-table td:nth-child(3)::before {
+    content: "Monthly: ";
+    font-weight: 700;
+    color: white;
+  }
+}
