@@ -523,3 +523,1114 @@ textarea {
     color: white;
   }
 }
+
+/* ReadyTech orange accent pulled from logo */
+:root {
+  --accent: #e58336;
+  --accent-light: #f6a15f;
+  --accent-soft: rgba(229, 131, 54, 0.14);
+  --accent-glow: rgba(229, 131, 54, 0.28);
+  --accent-border: rgba(229, 131, 54, 0.45);
+}
+
+/* Orange hero glow */
+.hero {
+  background:
+    linear-gradient(rgba(13, 17, 23, 0.72), rgba(13, 17, 23, 1)),
+    radial-gradient(circle at top right, var(--accent-glow), transparent 36%),
+    radial-gradient(circle at bottom left, rgba(229, 131, 54, 0.08), transparent 30%);
+}
+
+/* Orange buttons */
+.button {
+  background: linear-gradient(135deg, var(--accent-light), var(--accent));
+  color: #120804;
+  box-shadow: 0 8px 24px var(--accent-soft);
+}
+
+.button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+/* Keep secondary buttons clean but add orange border */
+.button.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--accent-border);
+  box-shadow: none;
+}
+
+.button.secondary:hover {
+  background: var(--accent-soft);
+  color: white;
+}
+
+/* Orange card hover accent */
+.card:hover,
+.price-card:hover {
+  border-color: var(--accent-border);
+  box-shadow: 0 12px 30px rgba(229, 131, 54, 0.08);
+}
+
+/* Orange link hover */
+nav a:hover,
+a:hover {
+  color: var(--accent-light);
+}
+
+/* Orange section labels */
+.eyebrow {
+  color: var(--accent-light);
+}
+
+/* Orange featured borders */
+.price-card.featured,
+.featured-panel,
+.service-note {
+  border-color: var(--accent-border);
+}
+
+/* Orange footer link hover */
+.site-footer a:hover {
+  color: var(--accent-light);
+}
+
+/* Services page: 4-card top row + centered 2-card second row */
+.services-page .services-grid {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Desktop layout */
+@media (min-width: 1050px) {
+  .services-page .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    justify-content: center;
+    align-items: stretch;
+    gap: 22px;
+  }
+
+  .services-page .service-card-backup-internet {
+    grid-column: 2;
+  }
+
+  .services-page .service-card-restaurant-technology {
+    grid-column: 3;
+  }
+}
+
+/* Tablet layout */
+@media (min-width: 700px) and (max-width: 1049px) {
+  .services-page .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+}
+
+/* Mobile layout */
+@media (max-width: 699px) {
+  .services-page .services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* FINAL FIX: ReadyTech floating header logo sizing */
+.site-header {
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 1000;
+}
+
+/* Keep navbar balanced while logo floats on the right */
+.site-header .nav-with-floating-logo {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: clamp(150px, 14vw, 220px) minmax(0, 1fr) clamp(150px, 14vw, 220px) !important;
+  align-items: center !important;
+  min-height: 76px !important;
+  padding: 12px 0 !important;
+}
+
+/* Invisible left-side spacer to balance the right-side logo */
+.site-header .logo-balance {
+  grid-column: 1 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 1px !important;
+}
+
+/* Force nav links to stay horizontal on desktop */
+.site-header .main-nav {
+  grid-column: 2 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 18px !important;
+  flex-wrap: wrap !important;
+}
+
+/* Actual floating logo */
+.site-header .floating-logo {
+  position: absolute !important;
+  right: 0 !important;
+  top: -14px !important;
+  width: clamp(145px, 12vw, 210px) !important;
+  max-width: 210px !important;
+  z-index: 20 !important;
+  line-height: 0 !important;
+}
+
+/* Prevent the image from using its full natural size */
+.site-header .floating-logo img {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.65));
+}
+
+/* Medium screens: shrink logo and keep nav usable */
+@media (max-width: 1100px) {
+  .site-header .nav-with-floating-logo {
+    grid-template-columns: minmax(0, 1fr) clamp(130px, 18vw, 170px) !important;
+    padding-right: 175px !important;
+  }
+
+  .site-header .logo-balance {
+    display: none !important;
+  }
+
+  .site-header .main-nav {
+    grid-column: 1 !important;
+    justify-content: flex-start !important;
+  }
+
+  .site-header .floating-logo {
+    width: clamp(130px, 17vw, 170px) !important;
+    max-width: 170px !important;
+    top: -8px !important;
+  }
+}
+
+/* Mobile: logo sits above nav instead of covering links */
+@media (max-width: 760px) {
+  .site-header .nav-with-floating-logo {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    min-height: auto !important;
+    padding: 12px 0 !important;
+  }
+
+  .site-header .main-nav {
+    width: 100% !important;
+    justify-content: center !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+  }
+
+  .site-header .floating-logo {
+    position: static !important;
+    order: -1 !important;
+    width: min(230px, 82vw) !important;
+    max-width: 230px !important;
+    margin: 0 auto 10px !important;
+  }
+}
+
+/* ReadyTech nav logo: transparent PNG to the left of Home */
+.site-header .nav-inline-logo {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 24px !important;
+  min-height: 82px !important;
+  padding: 8px 0 4px !important;
+}
+
+.site-header .nav-logo {
+  display: block !important;
+  width: clamp(120px, 13vw, 185px) !important;
+  flex: 0 0 auto !important;
+  line-height: 0 !important;
+  transform: translateY(7px) !important;
+}
+
+.site-header .nav-logo img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+
+.site-header .nav-inline-logo .main-nav {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 18px !important;
+}
+
+/* Mobile layout */
+@media (max-width: 760px) {
+  .site-header .nav-inline-logo {
+    flex-direction: column !important;
+    gap: 10px !important;
+    min-height: auto !important;
+    padding: 10px 0 !important;
+  }
+
+  .site-header .nav-logo {
+    width: min(220px, 85vw) !important;
+    transform: translateY(4px) !important;
+  }
+
+  .site-header .nav-inline-logo .main-nav {
+    gap: 10px !important;
+  }
+}
+
+/* FINAL NAVBAR SIZE OVERRIDE: thinner bar, larger text, logo overlap */
+.site-header {
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 1000 !important;
+}
+
+/* Make the navbar thinner */
+.site-header .nav,
+.site-header .nav-inline-logo,
+.site-header .nav-with-floating-logo {
+  min-height: 52px !important;
+  height: 52px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  overflow: visible !important;
+}
+
+/* Keep nav links centered and horizontal */
+.site-header .main-nav,
+.site-header nav {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 22px !important;
+}
+
+/* Make nav text slightly bigger */
+.site-header .main-nav a,
+.site-header nav a {
+  font-size: 1.08rem !important;
+  font-weight: 650 !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+}
+
+/* If using the inline logo to the left of Home */
+.site-header .nav-inline-logo {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 26px !important;
+}
+
+/* Keep the logo same size, but do not let it make the navbar taller */
+.site-header .nav-logo {
+  width: clamp(120px, 13vw, 185px) !important;
+  flex: 0 0 clamp(120px, 13vw, 185px) !important;
+  height: 42px !important;
+  position: relative !important;
+  overflow: visible !important;
+  line-height: 0 !important;
+  z-index: 20 !important;
+  transform: none !important;
+}
+
+/* Move logo slightly down while letting it overlap the thinner nav */
+.site-header .nav-logo img {
+  position: absolute !important;
+  left: 0 !important;
+  top: 10px !important;
+  width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+
+/* If your header is still using the older floating-logo version */
+.site-header .nav-with-floating-logo {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: clamp(150px, 14vw, 220px) minmax(0, 1fr) clamp(150px, 14vw, 220px) !important;
+  align-items: center !important;
+}
+
+.site-header .floating-logo {
+  width: clamp(145px, 12vw, 210px) !important;
+  max-width: 210px !important;
+  top: -6px !important;
+  right: 0 !important;
+  position: absolute !important;
+  line-height: 0 !important;
+  z-index: 20 !important;
+}
+
+.site-header .floating-logo img {
+  width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  object-fit: contain !important;
+}
+
+/* Mobile: allow the nav to breathe so links do not collide */
+@media (max-width: 760px) {
+  .site-header .nav,
+  .site-header .nav-inline-logo,
+  .site-header .nav-with-floating-logo {
+    height: auto !important;
+    min-height: 72px !important;
+    padding: 8px 0 !important;
+  }
+
+  .site-header .nav-inline-logo {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .site-header .nav-logo {
+    width: min(220px, 80vw) !important;
+    flex-basis: auto !important;
+    height: 70px !important;
+  }
+
+  .site-header .nav-logo img {
+    top: 0 !important;
+  }
+
+  .site-header .main-nav,
+  .site-header nav {
+    gap: 12px !important;
+  }
+
+  .site-header .main-nav a,
+  .site-header nav a {
+    font-size: 1rem !important;
+  }
+}
+
+/* FINAL OVERRIDE: move ReadyTech logo left and center it on mobile */
+.site-header {
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 1000 !important;
+}
+
+/* Desktop navbar: thin bar, logo on the left, nav centered */
+.site-header .nav-with-floating-logo {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: clamp(160px, 16vw, 230px) minmax(0, 1fr) clamp(160px, 16vw, 230px) !important;
+  align-items: center !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+/* Left spacer keeps the nav balanced */
+.site-header .logo-balance {
+  grid-column: 1 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 1px !important;
+}
+
+/* Keep nav links centered */
+.site-header .main-nav {
+  grid-column: 2 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 22px !important;
+}
+
+/* Nav text size */
+.site-header .main-nav a {
+  font-size: 1.08rem !important;
+  font-weight: 650 !important;
+  line-height: 1 !important;
+}
+
+/* Move the logo left and keep it overlapping the thinner nav */
+.site-header .floating-logo {
+  position: absolute !important;
+  left: clamp(4px, 1.5vw, 24px) !important;
+  right: auto !important;
+  top: -6px !important;
+  width: clamp(120px, 13vw, 185px) !important;
+  max-width: 185px !important;
+  z-index: 25 !important;
+  line-height: 0 !important;
+}
+
+/* Prevent the image from forcing nav height */
+.site-header .floating-logo img {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+
+/* Mobile: center logo above the nav bar */
+@media (max-width: 760px) {
+  .site-header .nav-with-floating-logo {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: auto !important;
+    min-height: 92px !important;
+    padding: 0 0 10px !important;
+    overflow: visible !important;
+  }
+
+  .site-header .logo-balance {
+    display: none !important;
+  }
+
+  .site-header .floating-logo {
+    position: relative !important;
+    order: -1 !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    width: min(210px, 78vw) !important;
+    max-width: 210px !important;
+    margin: -6px auto -4px !important;
+    transform: translateY(6px) !important;
+  }
+
+  .site-header .main-nav {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }
+
+  .site-header .main-nav a {
+    font-size: 1rem !important;
+  }
+}
+
+/* FINAL LOGO LEFT POSITION OVERRIDE */
+@media (min-width: 761px) {
+  .site-header .floating-logo {
+    left: -42px !important;
+    right: auto !important;
+  }
+}
+
+/* Keep mobile centered above the navbar */
+@media (max-width: 760px) {
+  .site-header .floating-logo {
+    left: auto !important;
+    right: auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* FINAL OVERRIDE: logo near far-left edge with spacing */
+:root {
+  --readytech-logo-left-space: 18px;
+  --readytech-logo-width: clamp(120px, 13vw, 185px);
+  --readytech-logo-down-shift: 6px;
+}
+
+/* Make the header area full-width so the logo can sit near the page edge */
+.site-header .nav-with-floating-logo {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+
+  position: relative !important;
+  display: grid !important;
+
+  /*
+    Left column reserves room for the logo.
+    Right column mirrors it so the nav stays centered.
+  */
+  grid-template-columns:
+    calc(var(--readytech-logo-left-space) + var(--readytech-logo-width))
+    minmax(0, 1fr)
+    calc(var(--readytech-logo-left-space) + var(--readytech-logo-width)) !important;
+
+  align-items: center !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+/* Left spacer keeps the navigation balanced */
+.site-header .logo-balance {
+  grid-column: 1 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 1px !important;
+}
+
+/* Keep navigation centered in the middle column */
+.site-header .main-nav {
+  grid-column: 2 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 22px !important;
+}
+
+/* Nav text */
+.site-header .main-nav a {
+  font-size: 1.08rem !important;
+  font-weight: 650 !important;
+  line-height: 1 !important;
+}
+
+/* Logo placed near far-left side with spacing */
+.site-header .floating-logo {
+  position: absolute !important;
+  left: var(--readytech-logo-left-space) !important;
+  right: auto !important;
+  top: 50% !important;
+  transform: translateY(calc(-50% + var(--readytech-logo-down-shift))) !important;
+
+  width: var(--readytech-logo-width) !important;
+  max-width: 185px !important;
+  z-index: 25 !important;
+  line-height: 0 !important;
+}
+
+/* Keep image from changing nav height */
+.site-header .floating-logo img {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+
+/* Mobile: center logo over the top of the nav */
+@media (max-width: 760px) {
+  .site-header .nav-with-floating-logo {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: auto !important;
+    min-height: 92px !important;
+    padding: 0 0 10px !important;
+    overflow: visible !important;
+  }
+
+  .site-header .logo-balance {
+    display: none !important;
+  }
+
+  .site-header .floating-logo {
+    position: relative !important;
+    order: -1 !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    transform: translateY(6px) !important;
+    width: min(210px, 78vw) !important;
+    max-width: 210px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-bottom: -4px !important;
+  }
+
+  .site-header .main-nav {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+  }
+
+  .site-header .main-nav a {
+    font-size: 1rem !important;
+  }
+}
+
+/* FINAL OVERRIDE: ReadyTech logo fixed to far upper-left */
+:root {
+  --readytech-corner-logo-left: 18px;
+  --readytech-corner-logo-top: 4px;
+  --readytech-corner-logo-width: clamp(120px, 13vw, 185px);
+}
+
+/* Keep header thin and allow logo overlap */
+.site-header {
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 1000 !important;
+}
+
+/* Make header content full-width so logo aligns to page edge, not container edge */
+.site-header .nav-with-floating-logo {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns:
+    calc(var(--readytech-corner-logo-left) + var(--readytech-corner-logo-width))
+    minmax(0, 1fr)
+    calc(var(--readytech-corner-logo-left) + var(--readytech-corner-logo-width)) !important;
+
+  align-items: center !important;
+  height: 52px !important;
+  min-height: 52px !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+/* Left spacer keeps nav centered */
+.site-header .logo-balance {
+  grid-column: 1 !important;
+  display: block !important;
+}
+
+/* Keep nav centered */
+.site-header .main-nav {
+  grid-column: 2 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 22px !important;
+}
+
+/* Nav text */
+.site-header .main-nav a {
+  font-size: 1.08rem !important;
+  font-weight: 650 !important;
+  line-height: 1 !important;
+}
+
+/* Logo stays in the far upper-left corner */
+.site-header .floating-logo {
+  position: absolute !important;
+  left: var(--readytech-corner-logo-left) !important;
+  top: var(--readytech-corner-logo-top) !important;
+  right: auto !important;
+  transform: none !important;
+
+  width: var(--readytech-corner-logo-width) !important;
+  max-width: 185px !important;
+  z-index: 30 !important;
+  line-height: 0 !important;
+}
+
+/* Image cannot stretch navbar */
+.site-header .floating-logo img {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+
+/* Mobile: keep the logo in the same far upper-left position */
+@media (max-width: 760px) {
+  .site-header .nav-with-floating-logo {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 118px !important;
+    padding: 68px 10px 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    overflow: visible !important;
+  }
+
+  .site-header .logo-balance {
+    display: none !important;
+  }
+
+  .site-header .floating-logo {
+    position: absolute !important;
+    left: var(--readytech-corner-logo-left) !important;
+    top: var(--readytech-corner-logo-top) !important;
+    right: auto !important;
+    transform: none !important;
+    width: min(165px, 42vw) !important;
+    max-width: 165px !important;
+    margin: 0 !important;
+  }
+
+  .site-header .main-nav {
+    width: 100% !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+
+  .site-header .main-nav a {
+    font-size: 1rem !important;
+  }
+}
+
+/* FINAL FIX: place ReadyTech logo in circled upper-left area */
+.site-header {
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 1000 !important;
+}
+
+/* Force header container to use the full page width instead of centered .container width */
+.site-header > .container.nav-with-floating-logo {
+  width: 100vw !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 220px minmax(0, 1fr) 220px !important;
+  align-items: center !important;
+
+  height: 56px !important;
+  min-height: 56px !important;
+  overflow: visible !important;
+}
+
+/* Keep nav centered across the full page */
+.site-header .main-nav {
+  grid-column: 2 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 22px !important;
+}
+
+/* Keep nav text readable */
+.site-header .main-nav a {
+  font-size: 1.08rem !important;
+  font-weight: 650 !important;
+  line-height: 1 !important;
+}
+
+/* Move logo to the circled upper-left area */
+.site-header .floating-logo {
+  position: absolute !important;
+  left: 16px !important;
+  top: 6px !important;
+  right: auto !important;
+  transform: none !important;
+
+  width: 175px !important;
+  max-width: 175px !important;
+  z-index: 30 !important;
+  line-height: 0 !important;
+}
+
+/* Prevent logo from stretching the nav bar */
+.site-header .floating-logo img {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+
+/* Mobile: keep the logo in the upper-left too, but slightly smaller */
+@media (max-width: 760px) {
+  .site-header > .container.nav-with-floating-logo {
+    width: 100vw !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 104px !important;
+    padding: 68px 10px 10px !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+  }
+
+  .site-header .floating-logo {
+    position: absolute !important;
+    left: 14px !important;
+    top: 6px !important;
+    right: auto !important;
+    transform: none !important;
+
+    width: 145px !important;
+    max-width: 145px !important;
+    margin: 0 !important;
+  }
+
+  .site-header .main-nav {
+    width: 100% !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+
+  .site-header .main-nav a {
+    font-size: 1rem !important;
+  }
+}
+
+/* FINAL LOGO LEFT EDGE ADJUSTMENT */
+.site-header .floating-logo {
+  left: 8px !important;
+  right: auto !important;
+}
+
+/* Keep same left position on mobile */
+@media (max-width: 760px) {
+  .site-header .floating-logo {
+    left: 8px !important;
+    right: auto !important;
+  }
+}
+
+/* FINAL LOGO UPWARD POSITION ADJUSTMENT */
+.site-header .floating-logo {
+  top: -4px !important;
+  left: 8px !important;
+  right: auto !important;
+  transform: none !important;
+}
+
+/* Mobile logo upward adjustment */
+@media (max-width: 760px) {
+  .site-header .floating-logo {
+    top: -2px !important;
+    left: 8px !important;
+    right: auto !important;
+    transform: none !important;
+  }
+}
+
+/* FINAL OVERRIDE: remove ReadyTech logo from navbar */
+.site-header .floating-logo,
+.site-header .nav-logo,
+.site-header .logo-balance {
+  display: none !important;
+}
+
+/* Center navbar after logo removal */
+.site-header .nav-no-logo {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 52px !important;
+  height: 52px !important;
+  padding: 0 !important;
+}
+
+.site-header .nav-no-logo .main-nav {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 24px !important;
+}
+
+.site-header .nav-no-logo .main-nav a {
+  font-size: 1.08rem !important;
+  font-weight: 650 !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 760px) {
+  .site-header .nav-no-logo {
+    height: auto !important;
+    min-height: 64px !important;
+    padding: 10px 0 !important;
+  }
+
+  .site-header .nav-no-logo .main-nav {
+    gap: 12px !important;
+  }
+
+  .site-header .nav-no-logo .main-nav a {
+    font-size: 1rem !important;
+  }
+}
+
+/* FINAL OVERRIDE: remove ReadyTech logo from navbar */
+.site-header .floating-logo,
+.site-header .nav-logo,
+.site-header .logo-balance {
+  display: none !important;
+}
+
+/* Center navbar after logo removal */
+.site-header .nav-no-logo {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 52px !important;
+  height: 52px !important;
+  padding: 0 !important;
+}
+
+.site-header .nav-no-logo .main-nav {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 24px !important;
+}
+
+.site-header .nav-no-logo .main-nav a {
+  font-size: 1.08rem !important;
+  font-weight: 650 !important;
+  line-height: 1 !important;
+}
+
+@media (max-width: 760px) {
+  .site-header .nav-no-logo {
+    height: auto !important;
+    min-height: 64px !important;
+    padding: 10px 0 !important;
+  }
+
+  .site-header .nav-no-logo .main-nav {
+    gap: 12px !important;
+  }
+
+  .site-header .nav-no-logo .main-nav a {
+    font-size: 1rem !important;
+  }
+}
+
+/* FINAL: Text ReadyTech navbar title */
+.site-header .floating-logo,
+.site-header .nav-logo,
+.site-header .logo-balance {
+  display: none !important;
+}
+
+.site-header .nav-title-logo {
+  display: grid !important;
+  grid-template-columns: 190px minmax(0, 1fr) 190px !important;
+  align-items: center !important;
+  min-height: 52px !important;
+  height: 52px !important;
+  padding: 0 !important;
+}
+
+.site-header .brand-title {
+  grid-column: 1 !important;
+  justify-self: start !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  text-decoration: none !important;
+  font-size: clamp(1.45rem, 2vw, 1.9rem) !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1 !important;
+}
+
+.site-header .brand-ready {
+  color: #ffffff !important;
+}
+
+.site-header .brand-tech {
+  color: var(--accent, #e58336) !important;
+}
+
+.site-header .nav-title-logo .main-nav {
+  grid-column: 2 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 24px !important;
+}
+
+.site-header .nav-title-logo .main-nav a {
+  font-size: 1.08rem !important;
+  font-weight: 650 !important;
+  line-height: 1 !important;
+}
+
+.site-header .brand-balance {
+  grid-column: 3 !important;
+  width: 100% !important;
+  height: 1px !important;
+}
+
+/* Mobile: title above nav, centered */
+@media (max-width: 760px) {
+  .site-header .nav-title-logo {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: auto !important;
+    min-height: 78px !important;
+    padding: 10px 0 !important;
+    gap: 10px !important;
+  }
+
+  .site-header .brand-title {
+    justify-self: center !important;
+    font-size: 1.75rem !important;
+  }
+
+  .site-header .brand-balance {
+    display: none !important;
+  }
+
+  .site-header .nav-title-logo .main-nav {
+    gap: 12px !important;
+  }
+
+  .site-header .nav-title-logo .main-nav a {
+    font-size: 1rem !important;
+  }
+}
