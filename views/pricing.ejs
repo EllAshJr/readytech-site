@@ -19,6 +19,8 @@
         <%= pricingData.intro %>
       </p>
 
+      <div class="quote-page-cta"><%- include("partials/instant-quote-button", { serviceSlug: "" }) %></div>
+
       <section class="pricing-anchor-grid" aria-label="Pricing summary">
         <% pricingData.categories.forEach(function(category) { %>
           <a href="#<%= category.slug %>" class="price-anchor-card">

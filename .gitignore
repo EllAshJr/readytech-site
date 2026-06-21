@@ -9,3 +9,9 @@ npm-debug.log*
 *.bak
 *.bak-*
 *.backup
+node_modules/
+node_modules/
+!/.env.example
+
+# Local installer backups
+backups/

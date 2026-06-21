@@ -1,0 +1,496 @@
+/* ReadyTech instant-estimate system */
+.quote-page {
+  max-width: 1180px;
+}
+
+.quote-page .lead {
+  max-width: 880px;
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.quote-disclaimer,
+.quote-warning-card,
+.quote-assumptions,
+.quote-errors,
+.quote-estimate-card,
+.quote-decision-card,
+.quote-summary-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  margin: 22px 0;
+}
+
+.quote-disclaimer {
+  border-left: 4px solid var(--accent);
+  color: var(--muted);
+}
+
+.quote-errors {
+  border-color: #ef4444;
+}
+
+.quote-errors h2 {
+  margin-top: 0;
+  font-size: 1.15rem;
+}
+
+.quote-form {
+  display: grid;
+  gap: 26px;
+}
+
+.quote-fieldset,
+.quote-service-section {
+  margin: 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel);
+}
+
+.quote-fieldset legend {
+  padding: 0 10px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: white;
+}
+
+.quote-service-section[hidden] {
+  display: none !important;
+}
+
+.quote-service-section h2 {
+  margin-top: 0;
+}
+
+.quote-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.quote-form label,
+.quote-submit-form label,
+.quote-decline-panel label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+}
+
+.quote-form input,
+.quote-form select,
+.quote-form textarea,
+.quote-decline-panel input,
+.quote-decline-panel select,
+.quote-decline-panel textarea {
+  width: 100%;
+  padding: 12px;
+  background: #05070a;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.quote-form small {
+  color: var(--muted);
+}
+
+.quote-service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.quote-service-option {
+  display: flex !important;
+  grid-template-columns: none !important;
+  align-items: flex-start;
+  gap: 12px !important;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #0d1117;
+  cursor: pointer;
+}
+
+.quote-service-option:has(input:checked) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+}
+
+.quote-service-option input {
+  width: auto;
+  margin-top: 4px;
+}
+
+.quote-service-option span {
+  display: grid;
+  gap: 6px;
+}
+
+.quote-service-option strong {
+  color: white;
+}
+
+.quote-service-option small {
+  line-height: 1.45;
+}
+
+.quote-subfieldset {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-top: 18px;
+  padding: 18px;
+}
+
+.quote-toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.quote-inline-check {
+  display: flex !important;
+  grid-template-columns: none !important;
+  align-items: center;
+  gap: 9px !important;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0d1117;
+}
+
+.quote-inline-check input {
+  width: auto;
+}
+
+.quote-help-text {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.quote-actions,
+.quote-decision-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.quote-summary-card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+}
+
+.quote-summary-card > div,
+.quote-total-grid > div {
+  display: grid;
+  gap: 6px;
+}
+
+.quote-summary-card span,
+.quote-total-grid span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.quote-summary-card strong,
+.quote-total-grid strong {
+  color: white;
+  font-size: 1.12rem;
+  text-transform: capitalize;
+}
+
+.quote-total-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.quote-total-grid > div {
+  border: 1px solid var(--accent-border, var(--border));
+  border-radius: 12px;
+  padding: 18px;
+  background: #0d1117;
+}
+
+.quote-total-grid strong {
+  color: var(--accent-light, var(--accent));
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+}
+
+.quote-line-items {
+  min-width: 720px;
+}
+
+.quote-line-notes {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.quote-review-badge {
+  display: inline-block;
+  margin-top: 8px;
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+.quote-warning-card {
+  border-color: #f59e0b;
+}
+
+.quote-assumptions {
+  color: var(--muted);
+}
+
+.quote-submit-form {
+  display: grid;
+  gap: 18px;
+  margin: 30px 0;
+}
+
+.quote-decision-card {
+  border-color: var(--accent-border, var(--border));
+}
+
+.quote-decision-card h2 {
+  margin-top: 0;
+}
+
+.quote-decision-actions form {
+  margin: 0;
+}
+
+.quote-decline-panel {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.quote-decline-panel summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.quote-decline-panel form {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.quote-status {
+  padding: 18px;
+  border-radius: 12px;
+  margin: 22px 0;
+  font-weight: 700;
+}
+
+.quote-status.accepted {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.55);
+}
+
+.quote-status.rejected,
+.quote-status.expired {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+}
+
+.quote-result-page {
+  max-width: 760px;
+  min-height: 60vh;
+}
+
+.instant-quote-button {
+  white-space: nowrap;
+}
+
+.quote-page-cta {
+  margin: 22px 0;
+}
+
+@media (max-width: 760px) {
+  .quote-form-grid,
+  .quote-total-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quote-fieldset,
+  .quote-service-section,
+  .quote-estimate-card,
+  .quote-decision-card {
+    padding: 18px;
+  }
+}
+
+/* READYTECH TECHNICAL FIELD TOOLTIPS */
+.quote-field-with-info {
+  position: relative;
+  min-width: 0;
+  overflow: visible;
+}
+
+.quote-field-with-info > label {
+  height: 100%;
+}
+
+.quote-field-with-info:not(.quote-inline-info) > label {
+  padding-right: 1.65rem;
+}
+
+.quote-inline-info .quote-inline-check {
+  width: 100%;
+  height: 100%;
+  padding-right: 2.75rem;
+}
+
+.quote-info-icon {
+  position: absolute;
+  top: 0.05rem;
+  right: 0.05rem;
+  z-index: 50;
+
+  display: inline-grid;
+  place-items: center;
+
+  width: 1.2rem;
+  height: 1.2rem;
+  padding: 0;
+
+  border: 1px solid var(--accent, #e58336);
+  border-radius: 50%;
+
+  background: rgba(229, 131, 54, 0.13);
+  color: var(--accent-light, #f6a15f);
+
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+
+  cursor: help;
+}
+
+.quote-inline-info .quote-info-icon {
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+}
+
+.quote-info-icon:hover,
+.quote-info-icon:focus-visible,
+.quote-info-icon.is-open {
+  background: var(--accent, #e58336);
+  color: #120804;
+  border-color: var(--accent-light, #f6a15f);
+}
+
+.quote-info-icon:focus-visible {
+  outline: 3px solid rgba(246, 161, 95, 0.34);
+  outline-offset: 3px;
+}
+
+.quote-info-letter {
+  display: block;
+  transform: translateY(-0.02rem);
+}
+
+.quote-info-tooltip {
+  position: absolute;
+  top: calc(100% + 0.65rem);
+  right: 0;
+  z-index: 1000;
+
+  width: max-content;
+  max-width: min(260px, calc(100vw - 40px));
+  padding: 0.7rem 0.8rem;
+
+  border: 1px solid rgba(229, 131, 54, 0.58);
+  border-radius: 9px;
+
+  background: #05070a;
+  color: #e5e7eb;
+
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.58);
+
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
+  white-space: normal;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transform: translateY(-4px);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease,
+    visibility 120ms ease;
+}
+
+.quote-info-tooltip::before {
+  content: "";
+  position: absolute;
+  right: 0.34rem;
+  bottom: 100%;
+
+  border-right: 6px solid transparent;
+  border-bottom: 7px solid rgba(229, 131, 54, 0.58);
+  border-left: 6px solid transparent;
+}
+
+.quote-info-icon:hover .quote-info-tooltip,
+.quote-info-icon:focus-visible .quote-info-tooltip,
+.quote-info-icon.is-open .quote-info-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.quote-info-note {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+
+  margin: -8px 0 22px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.quote-info-sample {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+
+  width: 1.2rem;
+  height: 1.2rem;
+
+  border: 1px solid var(--accent, #e58336);
+  border-radius: 50%;
+
+  background: rgba(229, 131, 54, 0.13);
+  color: var(--accent-light, #f6a15f);
+
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+@media (max-width: 760px) {
+  .quote-info-tooltip {
+    max-width: min(240px, calc(100vw - 34px));
+    font-size: 0.8rem;
+  }
+}
+/* END READYTECH TECHNICAL FIELD TOOLTIPS */

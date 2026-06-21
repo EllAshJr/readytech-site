@@ -1,0 +1,44 @@
+<% const finalStatuses = ['accepted_pending_verification', 'rejected', 'expired', 'converted']; %>
+
+<% if (!finalStatuses.includes(quote.status)) { %>
+  <section class="quote-decision-card">
+    <h2>Respond to this estimate</h2>
+    <p>
+      Acceptance means: <strong>Accept this estimate and request final verification and scheduling.</strong>
+    </p>
+
+    <div class="quote-decision-actions">
+      <form action="/estimate/<%= quote.quote_number %>/<%= rawToken %>/accept" method="POST">
+        <button type="submit" class="button">Accept Estimate</button>
+      </form>
+
+      <form action="/estimate/<%= quote.quote_number %>/<%= rawToken %>/request-call" method="POST">
+        <button type="submit" class="button secondary">Request a Call</button>
+      </form>
+    </div>
+
+    <details class="quote-decline-panel">
+      <summary>Decline estimate</summary>
+      <form action="/estimate/<%= quote.quote_number %>/<%= rawToken %>/reject" method="POST">
+        <label>
+          Reason
+          <select name="rejection_reason" required>
+            <option value="">Select a reason</option>
+            <% rejectionReasons.forEach(function(reason) { %><option value="<%= reason %>"><%= reason %></option><% }); %>
+          </select>
+        </label>
+        <label>
+          Optional details
+          <textarea name="rejection_details" rows="4" maxlength="1000"></textarea>
+        </label>
+        <button type="submit" class="button secondary">Confirm Decline</button>
+      </form>
+    </details>
+  </section>
+<% } else if (quote.status === 'accepted_pending_verification') { %>
+  <div class="quote-status accepted">Accepted — ReadyTech will follow up for final verification and scheduling.</div>
+<% } else if (quote.status === 'rejected') { %>
+  <div class="quote-status rejected">Declined — ReadyTech has recorded the response.</div>
+<% } else if (quote.status === 'expired') { %>
+  <div class="quote-status expired">This estimate has expired. Request a new estimate for current pricing.</div>
+<% } %>

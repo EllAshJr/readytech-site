@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("../partials/head") %>
+  <body>
+    <%- include("../partials/header") %>
+    <main class="container section quote-page quote-result-page">
+      <p class="eyebrow">Response Recorded</p>
+      <h1>Thank you for the update.</h1>
+      <div class="quote-status rejected">ReadyTech recorded the decline of <%= quote.quote_number %>.</div>
+      <p>You may contact ReadyTech later for a revised scope or a new estimate.</p>
+      <a href="/contact" class="button">Contact ReadyTech</a>
+    </main>
+    <%- include("../partials/footer") %>
+  </body>
+</html>

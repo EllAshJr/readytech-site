@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("../partials/head") %>
+
+  <body>
+    <%- include("../partials/header") %>
+
+    <% const selectedServices = Array.isArray(values.services) ? values.services : (values.services ? [values.services] : (selectedService ? [selectedService] : [])); %>
+    <% const isSelected = (slug) => selectedServices.includes(slug); %>
+    <% const valueOf = (name, fallback = "") => values[name] !== undefined ? values[name] : fallback; %>
+
+    <main class="container section quote-page">
+      <p class="eyebrow">ReadyTech Instant Estimate</p>
+      <h1>Tell us what your business needs</h1>
+      <p class="lead">
+        Select your business type and services. ReadyTech will calculate an estimated setup cost and monthly service amount using the published pricing model.
+      </p>
+
+      <div class="quote-disclaimer">
+        This is a non-binding estimate pending final technical verification. Do not enter passwords, VPN keys, payment-card data, medical records, or other sensitive information.
+      </div>
+
+      <% if (errors && errors.length) { %>
+        <div class="quote-errors" role="alert">
+          <h2>Please correct the following</h2>
+          <ul>
+            <% errors.forEach(function(error) { %><li><%= error %></li><% }); %>
+          </ul>
+        </div>
+      <% } %>
+
+      <form action="/instant-quote/calculate" method="POST" class="quote-form" id="instant-quote-form">
+        <fieldset class="quote-fieldset">
+          <legend>1. Contact and business information</legend>
+
+          <div class="quote-form-grid">
+            <label>
+              Contact name <span aria-hidden="true">*</span>
+              <input type="text" name="customer_name" value="<%= valueOf('customer_name') %>" maxlength="160" required />
+            </label>
+
+            <label>
+              Business or organization name <span aria-hidden="true">*</span>
+              <input type="text" name="business_name" value="<%= valueOf('business_name') %>" maxlength="200" required />
+            </label>
+
+            <label>
+              Contact email <span aria-hidden="true">*</span>
+              <input type="email" name="email" value="<%= valueOf('email') %>" maxlength="320" required />
+            </label>
+
+            <label>
+              Phone
+              <input type="tel" name="phone" value="<%= valueOf('phone') %>" maxlength="80" />
+            </label>
+
+            <label>
+              Business type <span aria-hidden="true">*</span>
+              <select name="business_type" id="business-type" required>
+                <option value="">Select a business type</option>
+                <% businessTypes.forEach(function(type) { %>
+                  <option value="<%= type.value %>" <%= valueOf('business_type') === type.value ? 'selected' : '' %>><%= type.label %></option>
+                <% }); %>
+              </select>
+            </label>
+
+            <label>
+              Number of locations <span aria-hidden="true">*</span>
+              <input type="number" name="location_count" value="<%= valueOf('location_count', 1) %>" min="1" max="100" required />
+            </label>
+
+            <label>
+              Service city <span aria-hidden="true">*</span>
+              <input type="text" name="city" value="<%= valueOf('city') %>" maxlength="120" required />
+            </label>
+
+            <label>
+              ZIP code <span aria-hidden="true">*</span>
+              <input type="text" name="zip_code" value="<%= valueOf('zip_code') %>" inputmode="numeric" maxlength="10" required />
+            </label>
+
+            <label>
+              Desired start timeframe <span aria-hidden="true">*</span>
+              <select name="start_timeframe" required>
+                <option value="">Select a timeframe</option>
+                <option value="urgent" <%= valueOf('start_timeframe') === 'urgent' ? 'selected' : '' %>>As soon as possible</option>
+                <option value="within-7-days" <%= valueOf('start_timeframe') === 'within-7-days' ? 'selected' : '' %>>Within 7 days</option>
+                <option value="within-30-days" <%= valueOf('start_timeframe') === 'within-30-days' ? 'selected' : '' %>>Within 30 days</option>
+                <option value="planning" <%= valueOf('start_timeframe') === 'planning' ? 'selected' : '' %>>Planning / researching</option>
+              </select>
+            </label>
+
+            <label>
+              Preferred work window <span aria-hidden="true">*</span>
+              <select name="work_window" required>
+                <option value="">Select a work window</option>
+                <option value="business-hours" <%= valueOf('work_window') === 'business-hours' ? 'selected' : '' %>>Business hours</option>
+                <option value="after-hours" <%= valueOf('work_window') === 'after-hours' ? 'selected' : '' %>>After hours / overnight</option>
+                <option value="flexible" <%= valueOf('work_window') === 'flexible' ? 'selected' : '' %>>Flexible</option>
+              </select>
+            </label>
+
+            <label>
+              Is the existing equipment known? <span aria-hidden="true">*</span>
+              <select name="equipment_known" required>
+                <option value="">Select one</option>
+                <option value="yes" <%= valueOf('equipment_known') === 'yes' ? 'selected' : '' %>>Yes</option>
+                <option value="partial" <%= valueOf('equipment_known') === 'partial' ? 'selected' : '' %>>Partially</option>
+                <option value="no" <%= valueOf('equipment_known') === 'no' ? 'selected' : '' %>>No / unsure</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Brief project description
+            <textarea name="description" rows="5" maxlength="2000" placeholder="Describe what is not working, what you want to improve, or any important deadlines."><%= valueOf('description') %></textarea>
+          </label>
+        </fieldset>
+
+        <fieldset class="quote-fieldset">
+          <legend>2. Select services</legend>
+          <p id="recommendation-note" class="quote-help-text" aria-live="polite"></p>
+
+          <div class="quote-service-grid">
+            <% serviceDefinitions.forEach(function(service) { %>
+              <label class="quote-service-option">
+                <input
+                  type="checkbox"
+                  name="services"
+                  value="<%= service.slug %>"
+                  data-service-checkbox="<%= service.slug %>"
+                  <%= isSelected(service.slug) ? 'checked' : '' %>
+                />
+                <span>
+                  <strong><%= service.label %></strong>
+                  <small><%= service.description %></small>
+                </span>
+              </label>
+            <% }); %>
+          </div>
+        </fieldset>
+
+        <section class="quote-service-section" data-service-section="managed-vpn" <%= isSelected('managed-vpn') ? '' : 'hidden' %>>
+          <h2>Managed VPN details</h2>
+          <div class="quote-form-grid">
+            <label>VPN type
+              <select name="vpn_type">
+                <option value="">Select one</option>
+                <option value="remote-access" <%= valueOf('vpn_type') === 'remote-access' ? 'selected' : '' %>>Remote access</option>
+                <option value="site-to-site" <%= valueOf('vpn_type') === 'site-to-site' ? 'selected' : '' %>>Site-to-site</option>
+                <option value="both" <%= valueOf('vpn_type') === 'both' ? 'selected' : '' %>>Both remote access and site-to-site</option>
+                <option value="multi-site" <%= valueOf('vpn_type') === 'multi-site' ? 'selected' : '' %>>Multi-site</option>
+              </select>
+            </label>
+            <label>Number of remote users
+              <input type="number" name="vpn_users" value="<%= valueOf('vpn_users', 0) %>" min="0" max="10000" />
+            </label>
+            <label>Firewall/router brand
+              <input type="text" name="vpn_firewall_brand" value="<%= valueOf('vpn_firewall_brand') %>" placeholder="Fortinet, Meraki, UniFi, unknown..." maxlength="160" />
+            </label>
+            <label>Is MFA required?
+              <select name="vpn_mfa"><option value="no">No</option><option value="yes" <%= valueOf('vpn_mfa') === 'yes' ? 'selected' : '' %>>Yes</option></select>
+            </label>
+            <label>Current VPN condition
+              <select name="vpn_state"><option value="new">New installation</option><option value="working" <%= valueOf('vpn_state') === 'working' ? 'selected' : '' %>>Existing and working</option><option value="broken" <%= valueOf('vpn_state') === 'broken' ? 'selected' : '' %>>Existing and broken</option></select>
+            </label>
+            <label>Monitoring required?
+              <select name="vpn_monitoring"><option value="yes">Yes</option><option value="no" <%= valueOf('vpn_monitoring') === 'no' ? 'selected' : '' %>>No</option></select>
+            </label>
+            <label>After-hours cutover required?
+              <select name="vpn_after_hours"><option value="no">No</option><option value="yes" <%= valueOf('vpn_after_hours') === 'yes' ? 'selected' : '' %>>Yes</option></select>
+            </label>
+          </div>
+        </section>
+
+        <section class="quote-service-section" data-service-section="private-cloud" <%= isSelected('private-cloud') ? '' : 'hidden' %>>
+          <h2>Private Cloud details</h2>
+          <div class="quote-form-grid">
+            <label>Number of users<input type="number" name="cloud_users" value="<%= valueOf('cloud_users', 0) %>" min="0" max="10000" /></label>
+            <label>Required storage in GB<input type="number" name="cloud_storage_gb" value="<%= valueOf('cloud_storage_gb', 0) %>" min="0" max="1000000" /></label>
+            <label>Expected 12-month growth (%)<input type="number" name="cloud_growth_percent" value="<%= valueOf('cloud_growth_percent', 0) %>" min="0" max="1000" /></label>
+            <label>Workstations to back up<input type="number" name="cloud_workstations" value="<%= valueOf('cloud_workstations', 0) %>" min="0" max="10000" /></label>
+            <label>Servers to back up<input type="number" name="cloud_servers" value="<%= valueOf('cloud_servers', 0) %>" min="0" max="1000" /></label>
+            <label>Existing data migration?<select name="cloud_migration"><option value="no">No</option><option value="yes" <%= valueOf('cloud_migration') === 'yes' ? 'selected' : '' %>>Yes</option></select></label>
+            <label>Backup frequency<select name="cloud_backup_frequency"><option value="daily">Daily</option><option value="hourly" <%= valueOf('cloud_backup_frequency') === 'hourly' ? 'selected' : '' %>>Hourly</option><option value="weekly" <%= valueOf('cloud_backup_frequency') === 'weekly' ? 'selected' : '' %>>Weekly</option></select></label>
+            <label>Retention days<input type="number" name="cloud_retention_days" value="<%= valueOf('cloud_retention_days', 30) %>" min="1" max="3650" /></label>
+            <label>Remote access required?<select name="cloud_remote_access"><option value="yes">Yes</option><option value="no" <%= valueOf('cloud_remote_access') === 'no' ? 'selected' : '' %>>No</option></select></label>
+            <label>Restore assistance required?<select name="cloud_restore_assistance"><option value="yes">Yes</option><option value="no" <%= valueOf('cloud_restore_assistance') === 'no' ? 'selected' : '' %>>No</option></select></label>
+            <label>Managed backup add-on?<select name="cloud_managed_backup"><option value="no">No</option><option value="yes" <%= valueOf('cloud_managed_backup') === 'yes' ? 'selected' : '' %>>Yes</option></select></label>
+          </div>
+        </section>
+
+        <section class="quote-service-section" data-service-section="network-monitoring" <%= isSelected('network-monitoring') ? '' : 'hidden' %>>
+          <h2>Network Monitoring details</h2>
+          <div class="quote-form-grid">
+            <label>Routers/firewalls<input type="number" name="monitor_routers" value="<%= valueOf('monitor_routers', 0) %>" min="0" /></label>
+            <label>Managed switches<input type="number" name="monitor_switches" value="<%= valueOf('monitor_switches', 0) %>" min="0" /></label>
+            <label>Wi-Fi access points<input type="number" name="monitor_access_points" value="<%= valueOf('monitor_access_points', 0) %>" min="0" /></label>
+            <label>Servers<input type="number" name="monitor_servers" value="<%= valueOf('monitor_servers', 0) %>" min="0" /></label>
+            <label>POS/business-critical devices<input type="number" name="monitor_critical_devices" value="<%= valueOf('monitor_critical_devices', 0) %>" min="0" /></label>
+            <label>Printers/KDS devices<input type="number" name="monitor_printers" value="<%= valueOf('monitor_printers', 0) %>" min="0" /></label>
+            <label>Alert coverage<select name="monitor_alerting"><option value="business-hours">Business hours</option><option value="24-7" <%= valueOf('monitor_alerting') === '24-7' ? 'selected' : '' %>>24/7</option></select></label>
+            <label>Alert method<select name="monitor_alert_method"><option value="email">Email</option><option value="sms" <%= valueOf('monitor_alert_method') === 'sms' ? 'selected' : '' %>>SMS</option><option value="both" <%= valueOf('monitor_alert_method') === 'both' ? 'selected' : '' %>>Email and SMS</option></select></label>
+            <label>Response level<select name="monitor_response"><option value="standard">Standard</option><option value="priority" <%= valueOf('monitor_response') === 'priority' ? 'selected' : '' %>>Priority</option></select></label>
+            <label>Monthly reporting?<select name="monitor_reporting"><option value="yes">Yes</option><option value="no" <%= valueOf('monitor_reporting') === 'no' ? 'selected' : '' %>>No</option></select></label>
+          </div>
+        </section>
+
+        <section class="quote-service-section" data-service-section="business-wifi" <%= isSelected('business-wifi') ? '' : 'hidden' %>>
+          <h2>Business Wi-Fi details</h2>
+          <div class="quote-form-grid">
+            <label>Approximate square footage<input type="number" name="wifi_sqft" value="<%= valueOf('wifi_sqft', 0) %>" min="0" /></label>
+            <label>Number of floors<input type="number" name="wifi_floors" value="<%= valueOf('wifi_floors', 1) %>" min="1" max="100" /></label>
+            <label>Coverage area<select name="wifi_coverage"><option value="">Select one</option><option value="indoor" <%= valueOf('wifi_coverage') === 'indoor' ? 'selected' : '' %>>Indoor</option><option value="outdoor" <%= valueOf('wifi_coverage') === 'outdoor' ? 'selected' : '' %>>Outdoor</option><option value="both" <%= valueOf('wifi_coverage') === 'both' ? 'selected' : '' %>>Indoor and outdoor</option></select></label>
+            <label>Known access-point count<input type="number" name="wifi_access_points" value="<%= valueOf('wifi_access_points', 0) %>" min="0" /><small>Enter 0 if unknown.</small></label>
+            <label>Estimated concurrent devices<input type="number" name="wifi_concurrent_devices" value="<%= valueOf('wifi_concurrent_devices', 0) %>" min="0" /></label>
+            <label>Staff Wi-Fi?<select name="wifi_staff"><option value="yes">Yes</option><option value="no" <%= valueOf('wifi_staff') === 'no' ? 'selected' : '' %>>No</option></select></label>
+            <label>Guest Wi-Fi?<select name="wifi_guest"><option value="yes">Yes</option><option value="no" <%= valueOf('wifi_guest') === 'no' ? 'selected' : '' %>>No</option></select></label>
+            <label>Guest portal / QR access?<select name="wifi_portal"><option value="no">No</option><option value="yes" <%= valueOf('wifi_portal') === 'yes' ? 'selected' : '' %>>Yes</option></select></label>
+            <label>Existing cabling?<select name="wifi_cabling"><option value="unknown">Unknown</option><option value="yes" <%= valueOf('wifi_cabling') === 'yes' ? 'selected' : '' %>>Yes</option><option value="no" <%= valueOf('wifi_cabling') === 'no' ? 'selected' : '' %>>No</option></select></label>
+            <label>Current dead zones?<select name="wifi_dead_zones"><option value="no">No</option><option value="yes" <%= valueOf('wifi_dead_zones') === 'yes' ? 'selected' : '' %>>Yes</option><option value="unknown" <%= valueOf('wifi_dead_zones') === 'unknown' ? 'selected' : '' %>>Unknown</option></select></label>
+            <label>Content filtering?<select name="wifi_filtering"><option value="no">No</option><option value="yes" <%= valueOf('wifi_filtering') === 'yes' ? 'selected' : '' %>>Yes</option></select></label>
+          </div>
+          <p class="quote-help-text">Access-point counts remain subject to RF/site validation because walls, materials, interference, and device density affect design.</p>
+        </section>
+
+        <section class="quote-service-section" data-service-section="backup-internet" <%= isSelected('backup-internet') ? '' : 'hidden' %>>
+          <h2>Backup Internet details</h2>
+          <div class="quote-form-grid">
+            <label>Preferred backup type<select name="backup_type"><option value="">Select one</option><option value="lte" <%= valueOf('backup_type') === 'lte' ? 'selected' : '' %>>LTE</option><option value="5g" <%= valueOf('backup_type') === '5g' ? 'selected' : '' %>>5G</option><option value="dual-isp" <%= valueOf('backup_type') === 'dual-isp' ? 'selected' : '' %>>Two wired ISPs</option><option value="continuity" <%= valueOf('backup_type') === 'continuity' ? 'selected' : '' %>>Business continuity package</option><option value="unsure" <%= valueOf('backup_type') === 'unsure' ? 'selected' : '' %>>Unsure</option></select></label>
+            <label>Required backup speed<input type="text" name="backup_speed" value="<%= valueOf('backup_speed') %>" placeholder="Example: 100 Mbps" /></label>
+            <label>Existing cellular router?<select name="backup_router"><option value="no">No</option><option value="yes" <%= valueOf('backup_router') === 'yes' ? 'selected' : '' %>>Yes</option><option value="unknown" <%= valueOf('backup_router') === 'unknown' ? 'selected' : '' %>>Unknown</option></select></label>
+            <label>Carrier plan available?<select name="backup_carrier"><option value="no">No</option><option value="yes" <%= valueOf('backup_carrier') === 'yes' ? 'selected' : '' %>>Yes</option><option value="unknown" <%= valueOf('backup_carrier') === 'unknown' ? 'selected' : '' %>>Unknown</option></select></label>
+            <label>Automatic failover?<select name="backup_auto_failover"><option value="yes">Yes</option><option value="no" <%= valueOf('backup_auto_failover') === 'no' ? 'selected' : '' %>>No</option></select></label>
+            <label>Monthly failover testing?<select name="backup_testing"><option value="yes">Yes</option><option value="no" <%= valueOf('backup_testing') === 'no' ? 'selected' : '' %>>No</option></select></label>
+            <label>Acceptable downtime<input type="text" name="backup_downtime" value="<%= valueOf('backup_downtime') %>" placeholder="Example: less than 5 minutes" /></label>
+          </div>
+          <fieldset class="quote-subfieldset">
+            <legend>Systems that must remain online</legend>
+            <% ['POS and payments','Online ordering','Cloud applications','VoIP phones','Cameras','Guest Wi-Fi'].forEach(function(system) { %>
+              <label class="quote-inline-check"><input type="checkbox" name="backup_critical_systems" value="<%= system %>" <%= (Array.isArray(values.backup_critical_systems) ? values.backup_critical_systems : [values.backup_critical_systems]).includes(system) ? 'checked' : '' %> /> <%= system %></label>
+            <% }); %>
+          </fieldset>
+        </section>
+
+        <section class="quote-service-section" data-service-section="restaurant-technology" <%= isSelected('restaurant-technology') ? '' : 'hidden' %>>
+          <h2>Restaurant Technology details</h2>
+          <div class="quote-form-grid">
+            <label>POS vendor<input type="text" name="restaurant_pos_vendor" value="<%= valueOf('restaurant_pos_vendor') %>" placeholder="Toast, Square, Clover, other..." /></label>
+            <label>POS terminals<input type="number" name="restaurant_pos_terminals" value="<%= valueOf('restaurant_pos_terminals', 0) %>" min="0" /></label>
+            <label>Payment terminals<input type="number" name="restaurant_payment_terminals" value="<%= valueOf('restaurant_payment_terminals', 0) %>" min="0" /></label>
+            <label>Receipt/kitchen printers<input type="number" name="restaurant_printers" value="<%= valueOf('restaurant_printers', 0) %>" min="0" /></label>
+            <label>Kitchen display systems<input type="number" name="restaurant_kds" value="<%= valueOf('restaurant_kds', 0) %>" min="0" /></label>
+            <label>Existing Wi-Fi access points<input type="number" name="restaurant_access_points" value="<%= valueOf('restaurant_access_points', 0) %>" min="0" /></label>
+            <label>Delivery apps used<input type="text" name="restaurant_delivery_apps" value="<%= valueOf('restaurant_delivery_apps') %>" placeholder="DoorDash, Uber Eats, Grubhub" /></label>
+            <label>Network package<select name="restaurant_network_level"><option value="none">No base network package</option><option value="health-check" <%= valueOf('restaurant_network_level') === 'health-check' ? 'selected' : '' %>>Technology Health Check</option><option value="essentials" <%= valueOf('restaurant_network_level') === 'essentials' ? 'selected' : '' %>>Restaurant Network Essentials</option><option value="uptime" <%= valueOf('restaurant_network_level') === 'uptime' ? 'selected' : '' %>>Restaurant Uptime Pro</option></select></label>
+          </div>
+          <div class="quote-toggle-grid">
+            <% const restaurantOptions = [
+              ['restaurant_pos_readiness','POS network readiness'],
+              ['restaurant_pos_cutover','POS integration / cutover'],
+              ['restaurant_pos_support','Monthly POS support'],
+              ['restaurant_qr_menu','QR menu programming'],
+              ['restaurant_table_qr','Table QR experience'],
+              ['restaurant_loyalty','Loyalty program'],
+              ['restaurant_vip','Birthday / VIP club'],
+              ['restaurant_reviews','Review generation'],
+              ['restaurant_guest_wifi_marketing','Guest Wi-Fi marketing'],
+              ['restaurant_backup_internet','Backup internet'],
+              ['restaurant_monitoring','Restaurant monitoring'],
+              ['restaurant_after_hours','After-hours POS cutover'],
+              ['restaurant_complete_stack','Complete Restaurant Technology Stack']
+            ]; %>
+            <% restaurantOptions.forEach(function(option) { %>
+              <label class="quote-inline-check"><input type="checkbox" name="<%= option[0] %>" value="yes" <%= valueOf(option[0]) === 'yes' || valueOf(option[0]) === 'on' ? 'checked' : '' %> /> <%= option[1] %></label>
+            <% }); %>
+          </div>
+        </section>
+
+        <div class="quote-actions">
+          <button type="submit" class="button">Calculate My Estimate</button>
+          <a href="/pricing" class="button secondary">Review Published Pricing</a>
+        </div>
+      </form>
+    </main>
+
+    <script>
+      window.READYTECH_QUOTE_RECOMMENDATIONS = <%- JSON.stringify(recommendations).replace(/</g, '\\u003c') %>;
+    </script>
+    <script src="/js/quote-intake.js" defer></script>
+    <%- include("../partials/footer") %>
+  </body>
+</html>

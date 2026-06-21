@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("../partials/head") %>
+  <body>
+    <%- include("../partials/header") %>
+    <main class="container section quote-page quote-result-page">
+      <p class="eyebrow">Estimate Accepted</p>
+      <h1>Thank you, <%= quote.customer_name %>.</h1>
+      <div class="quote-status accepted">ReadyTech recorded your acceptance of <%= quote.quote_number %>.</div>
+      <p>Acceptance requests final technical verification and scheduling. ReadyTech will contact you to confirm scope, equipment, site conditions, and the next available date.</p>
+      <a href="/" class="button">Return Home</a>
+    </main>
+    <%- include("../partials/footer") %>
+  </body>
+</html>

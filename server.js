@@ -1,9 +1,12 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const restaurantData = require("./data/restaurant");
 const pricingData = require("./data/pricing");
+const quoteRouter = require("./routes/quotes");
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
@@ -116,6 +119,7 @@ app.get("/services/:slug", (req, res) => {
     pageTitle: `${service.title} | Austin, Manor & Houston`,
     metaDescription: service.description,
     service,
+    serviceSlug: req.params.slug,
   });
 });
 
@@ -158,6 +162,8 @@ app.post("/contact", (req, res) => {
 
   res.send("Thank you. Your request has been received.");
 });
+
+app.use(quoteRouter);
 
 app.get("/:city/:slug", (req, res) => {
   const city = restaurantData.cities[req.params.city];

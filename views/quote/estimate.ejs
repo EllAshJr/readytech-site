@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("../partials/head") %>
+
+  <body>
+    <%- include("../partials/header") %>
+
+    <main class="container section quote-page">
+      <p class="eyebrow">ReadyTech Estimate</p>
+      <h1><%= quote.quote_number %></h1>
+      <p class="lead">Prepared for <strong><%= quote.business_name %></strong>.</p>
+
+      <% if (typeof errors !== "undefined" && errors && errors.length) { %>
+        <div class="quote-errors"><ul><% errors.forEach(function(error) { %><li><%= error %></li><% }); %></ul></div>
+      <% } %>
+
+      <% if (deliveryPending) { %>
+        <div class="quote-warning-card">
+          The estimate was saved, but email delivery is pending. ReadyTech has been notified through the application logs.
+        </div>
+      <% } %>
+
+      <section class="quote-summary-card">
+        <div><span>Contact</span><strong><%= quote.customer_name %></strong></div>
+        <div><span>Status</span><strong><%= quote.status.replaceAll('_', ' ') %></strong></div>
+        <div><span>Created</span><strong><%= new Date(quote.created_at).toLocaleDateString('en-US') %></strong></div>
+        <div><span>Expires</span><strong><%= new Date(quote.expires_at).toLocaleDateString('en-US') %></strong></div>
+      </section>
+
+      <section class="quote-estimate-card">
+        <div class="quote-total-grid">
+          <div><span>Estimated setup</span><strong><%= formatMoney(quote.setup_total) %></strong></div>
+          <div><span>Estimated monthly</span><strong><%= formatMoney(quote.monthly_total) %>/month</strong></div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="pricing-table quote-line-items">
+            <thead><tr><th>Service</th><th>Setup</th><th>Monthly</th></tr></thead>
+            <tbody>
+              <% quote.line_items.forEach(function(item) { %>
+                <tr>
+                  <td>
+                    <strong><%= item.name %></strong>
+                    <% if (item.notes && item.notes.length) { %><ul class="quote-line-notes"><% item.notes.forEach(function(note) { %><li><%= note %></li><% }); %></ul><% } %>
+                    <% if (item.manualReview) { %><small class="quote-review-badge">Final review required</small><% } %>
+                  </td>
+                  <td><%= formatMoney(item.setup) %></td>
+                  <td><%= formatMoney(item.monthly) %>/mo</td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <% if (quote.warnings && quote.warnings.length) { %>
+        <section class="quote-warning-card"><h2>Verification items</h2><ul><% quote.warnings.forEach(function(item) { %><li><%= item %></li><% }); %></ul></section>
+      <% } %>
+
+      <section class="quote-assumptions"><h2>Assumptions and exclusions</h2><ul><% quote.assumptions.forEach(function(item) { %><li><%= item %></li><% }); %></ul></section>
+
+      <%- include("decision", { quote, rawToken, rejectionReasons }) %>
+    </main>
+
+    <%- include("../partials/footer") %>
+  </body>
+</html>

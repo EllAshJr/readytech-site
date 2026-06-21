@@ -26,6 +26,7 @@
 
             <p><%= services[slug].description %></p>
             <a href="/services/<%= slug %>">Learn more</a>
+            <%- include("partials/instant-quote-button", { serviceSlug: slug }) %>
           </article>
         <% }); %>
       </div>
