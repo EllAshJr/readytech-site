@@ -5,59 +5,135 @@
   <body>
     <%- include("partials/header") %>
 
-    <main class="container section">
-      <h1>Private Infrastructure Pricing</h1>
-      <p>
-        Simple recurring service pricing for secure networking, VPN, private
-        cloud, monitoring, Wi-Fi, and backup internet.
+    <main class="container section pricing-page">
+      <p class="eyebrow">ReadyTech Pricing</p>
+      <h1>Service Pricing for Austin, Manor, and Houston</h1>
+
+      <p class="lead">
+        Clear starting prices for managed VPN, private cloud, network
+        monitoring, business Wi‑Fi, backup internet, and restaurant technology
+        services.
       </p>
 
-      <div class="pricing-grid">
-        <article class="price-card">
-          <h2>Home Secure Network</h2>
-          <p class="price">$49/mo</p>
-          <ul>
-            <li>Managed home network</li>
-            <li>Basic VPN support</li>
-            <li>Wi-Fi support</li>
-            <li>Monthly health check</li>
-          </ul>
-        </article>
+      <p class="service-note">
+        <%= pricingData.intro %>
+      </p>
 
-        <article class="price-card featured">
-          <h2>Small Business Infrastructure</h2>
-          <p class="price">$149/mo</p>
-          <ul>
-            <li>Managed secure network</li>
-            <li>Managed VPN</li>
-            <li>Monitoring</li>
-            <li>Basic security support</li>
-          </ul>
-        </article>
+      <section class="pricing-anchor-grid" aria-label="Pricing summary">
+        <% pricingData.categories.forEach(function(category) { %>
+          <a href="#<%= category.slug %>" class="price-anchor-card">
+            <span><%= category.title %></span>
+            <strong><%= pricingData.anchorMap[category.slug] %></strong>
+          </a>
+        <% }); %>
+      </section>
 
-        <article class="price-card">
-          <h2>Business Continuity</h2>
-          <p class="price">$249/mo</p>
-          <ul>
-            <li>Network management</li>
-            <li>Dual internet support</li>
-            <li>LTE/5G failover</li>
-            <li>Uptime monitoring</li>
-          </ul>
-        </article>
+      <section class="pricing-section">
+        <h2>ReadyTech Rate Card</h2>
+        <p>
+          Hourly and project rates for support, network work, vendor
+          coordination, and emergency response.
+        </p>
 
-        <article class="price-card">
-          <h2>Private Infrastructure</h2>
-          <p class="price">$399/mo</p>
-          <ul>
-            <li>Managed network</li>
-            <li>Private cloud</li>
-            <li>VPN</li>
-            <li>Backups</li>
-            <li>Monitoring</li>
-          </ul>
-        </article>
-      </div>
+        <div class="table-wrap">
+          <table class="pricing-table detail-pricing-table">
+            <thead>
+              <tr>
+                <th>Service Type</th>
+                <th>Suggested Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% pricingData.rateCard.forEach(function(row) { %>
+                <tr>
+                  <td><%= row.service %></td>
+                  <td><%= row.rate %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <% pricingData.categories.forEach(function(category) { %>
+        <section id="<%= category.slug %>" class="pricing-section category-pricing-section">
+          <div class="pricing-section-heading">
+            <div>
+              <p class="eyebrow">Service Category</p>
+              <h2><%= category.title %></h2>
+              <p><%= category.description %></p>
+            </div>
+
+            <div class="category-anchor-price">
+              <span>Starting at</span>
+              <strong><%= pricingData.anchorMap[category.slug] %></strong>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="pricing-table detail-pricing-table">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Setup / Project</th>
+                  <th>Monthly / Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% category.plans.forEach(function(plan) { %>
+                  <tr>
+                    <td><%= plan.service %></td>
+                    <td><%= plan.setup %></td>
+                    <td><%= plan.monthly %></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+          <% const includePlans = category.plans.filter(function(plan) { return plan.includes && plan.includes.length; }); %>
+          <% if (includePlans.length) { %>
+            <div class="plan-includes-grid">
+              <% includePlans.forEach(function(plan) { %>
+                <article class="card compact-card">
+                  <h3><%= plan.service %></h3>
+                  <ul>
+                    <% plan.includes.forEach(function(item) { %>
+                      <li><%= item %></li>
+                    <% }); %>
+                  </ul>
+                </article>
+              <% }); %>
+            </div>
+          <% } %>
+
+          <% if (category.notes && category.notes.length) { %>
+            <div class="pricing-notes">
+              <% category.notes.forEach(function(note) { %>
+                <p><%= note %></p>
+              <% }); %>
+            </div>
+          <% } %>
+        </section>
+      <% }); %>
+
+      <section class="pricing-section pricing-rules">
+        <h2>Pricing Notes</h2>
+        <ul>
+          <% pricingData.rules.forEach(function(rule) { %>
+            <li><%= rule %></li>
+          <% }); %>
+        </ul>
+      </section>
+
+      <section class="card featured-panel pricing-cta">
+        <h2>Need a custom quote?</h2>
+        <p>
+          Tell ReadyTech what you are trying to connect, monitor, secure, or
+          support. We can recommend the right service level for your site.
+        </p>
+        <a href="/contact" class="button">Request a Quote</a>
+      </section>
     </main>
 
     <%- include("partials/footer") %>

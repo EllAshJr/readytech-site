@@ -6,7 +6,7 @@
     <%- include("partials/header") %>
 
     <main class="container section services-page">
-      <h1>Private Infrastructure Services</h1>
+      <h1>ReadyTech Services</h1>
       <p>
         Secure networking, managed VPN, private cloud, Wi‑Fi, monitoring,
         backup internet, and restaurant technology services for Austin, Manor,
@@ -15,8 +15,15 @@
 
       <div class="grid services-grid">
         <% Object.keys(services).forEach(function(slug) { %>
+          <% const startingPrice = (typeof pricingData !== "undefined" && pricingData.anchorMap) ? pricingData.anchorMap[slug] : null; %>
+
           <article class="card service-card service-card-<%= slug %>">
             <h2><%= services[slug].title %></h2>
+
+            <% if (startingPrice) { %>
+              <p class="service-price-anchor"><%= startingPrice %></p>
+            <% } %>
+
             <p><%= services[slug].description %></p>
             <a href="/services/<%= slug %>">Learn more</a>
           </article>

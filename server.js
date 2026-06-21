@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const restaurantData = require("./data/restaurant");
+const pricingData = require("./data/pricing");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -79,6 +80,7 @@ app.get("/services", (req, res) => {
     metaDescription:
       "Managed VPN, private cloud, network monitoring, business Wi‑Fi, backup internet, and restaurant technology services.",
     services,
+    pricingData,
   });
 });
 
@@ -138,6 +140,7 @@ app.get("/pricing", (req, res) => {
     metaDescription:
       "Simple monthly pricing for managed VPN, private cloud, secure networking, Wi‑Fi, monitoring, backup internet, and restaurant technology services.",
     restaurantData,
+    pricingData,
   });
 });
 
