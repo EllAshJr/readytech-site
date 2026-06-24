@@ -1854,3 +1854,66 @@ a:hover {
   color: #ffffff !important;
   border-color: var(--accent, #e58336) !important;
 }
+
+/* Larger Book Assessment button with yellow text */
+.site-header .nav-assessment-button,
+.site-header .nav-assessment-button:link,
+.site-header .nav-assessment-button:visited {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  min-width: 170px !important;
+  min-height: 46px !important;
+  padding: 12px 22px !important;
+
+  background: #0b0f14 !important;
+  background-image: none !important;
+
+  color: #ffd34d !important;
+  border: 1px solid #ffd34d !important;
+  border-radius: 12px !important;
+
+  box-shadow: none !important;
+}
+
+/* Hover and keyboard-focus state */
+.site-header .nav-assessment-button:hover,
+.site-header .nav-assessment-button:focus,
+.site-header .nav-assessment-button:focus-visible,
+.site-header .nav-assessment-button:active {
+  background: #151a21 !important;
+  background-image: none !important;
+
+  color: #ffe57a !important;
+  border-color: #ffe57a !important;
+
+  box-shadow: 0 0 14px rgba(255, 211, 77, 0.18) !important;
+}
+
+/* Keep it balanced on smaller screens */
+@media (max-width: 760px) {
+  .site-header .nav-assessment-button {
+    min-width: 155px !important;
+    min-height: 44px !important;
+    padding: 11px 18px !important;
+  }
+}
+
+/* Book Assessment button — ReadyTech orange */
+.site-header .nav-assessment-button,
+.site-header .nav-assessment-button:link,
+.site-header .nav-assessment-button:visited,
+.site-header .nav-assessment-button:hover,
+.site-header .nav-assessment-button:focus,
+.site-header .nav-assessment-button:focus-visible,
+.site-header .nav-assessment-button:active {
+  color: var(--accent, #e58336) !important;
+  border-color: var(--accent, #e58336) !important;
+}
+
+.site-header .nav-assessment-button:hover,
+.site-header .nav-assessment-button:focus-visible {
+  background: rgba(229, 131, 54, 0.1) !important;
+  box-shadow: 0 0 14px rgba(229, 131, 54, 0.22) !important;
+}
