@@ -51,9 +51,9 @@
         <p class="eyebrow">Flagship offers</p>
         <h2>Start with the right level of protection</h2>
 
-        <div class="pricing-grid">
+        <div class="pricing-grid flagship-offers-grid">
           <% siteStrategy.flagshipOffers.forEach(function (offer) { %>
-            <article class="price-card">
+            <article class="price-card<%= offer.featured ? " flagship-featured" : "" %>">
               <h3><%= offer.title %></h3>
               <p class="price"><%= offer.price %></p>
               <p><%= offer.priceNote %></p>

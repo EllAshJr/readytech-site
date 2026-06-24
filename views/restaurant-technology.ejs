@@ -6,6 +6,18 @@
     <%- include("partials/header") %>
 
     <main class="restaurant-page">
+      <%
+        const readyContinuityPro = siteStrategy.flagshipOffers.find(
+          function (offer) {
+            return offer.id === "readycontinuity-pro";
+          }
+        );
+
+        if (!readyContinuityPro) {
+          throw new Error("ReadyContinuity Pro offer is missing.");
+        }
+      %>
+
       <section class="hero">
         <div class="container">
           <p class="eyebrow">ReadyOps for Restaurants</p>
@@ -252,41 +264,36 @@
         </div>
       </section>
 
-      <section id="health-check" class="container section">
-        <article class="card featured-panel">
-          <p class="eyebrow">Recommended first step</p>
+            <section id="restaurant-continuity" class="container section">
+        <article class="card featured-panel flagship-featured">
+          <p class="eyebrow">Recommended restaurant continuity plan</p>
 
-          <h2><%= siteStrategy.flagshipOffers[0].title %></h2>
+          <h2><%= readyContinuityPro.title %></h2>
 
-          <p class="price"><%= siteStrategy.flagshipOffers[0].price %></p>
+          <p class="price"><%= readyContinuityPro.price %></p>
 
-          <p><%= siteStrategy.flagshipOffers[0].description %></p>
+          <p><%= readyContinuityPro.priceNote %></p>
 
-          <h3>Inspection Areas</h3>
+          <p><%= readyContinuityPro.description %></p>
 
-          <ul class="columns">
-            <% restaurantData.healthCheck.inspect.forEach(function(item) { %>
+          <ul>
+            <% readyContinuityPro.includes.forEach(function(item) { %>
               <li><%= item %></li>
             <% }); %>
           </ul>
 
-          <h3>Report Sections</h3>
+          <div class="hero-actions">
+            <a href="<%= siteStrategy.ctas.primary.href %>" class="button">
+              Book a Business Uptime Assessment
+            </a>
 
-          <ul class="columns">
-            <% restaurantData.healthCheck.reportSections.forEach(function(item) { %>
-              <li><%= item %></li>
-            <% }); %>
-          </ul>
-
-          <% if (siteStrategy.flagshipOffers[0].note) { %>
-            <p>
-              <small><%= siteStrategy.flagshipOffers[0].note %></small>
-            </p>
-          <% } %>
-
-          <a href="<%= siteStrategy.ctas.primary.href %>" class="button">
-            Book the Assessment
-          </a>
+            <a
+              href="/instant-quote?service=restaurant-technology"
+              class="button secondary"
+            >
+              Get a Restaurant Estimate
+            </a>
+          </div>
         </article>
       </section>
 

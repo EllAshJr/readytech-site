@@ -11,9 +11,9 @@
 
       <p class="service-note"><%= siteStrategy.pricingNotice %></p>
 
-      <div class="pricing-grid">
+      <div class="pricing-grid flagship-offers-grid">
         <% siteStrategy.flagshipOffers.forEach(function (offer) { %>
-          <article class="price-card">
+          <article class="price-card<%= offer.featured ? " flagship-featured" : "" %>">
             <h2><%= offer.title %></h2>
             <p class="price"><%= offer.price %></p>
             <p><%= offer.priceNote %></p>
