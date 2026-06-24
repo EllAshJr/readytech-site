@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const restaurantData = require("./data/restaurant");
 const pricingData = require("./data/pricing");
+const siteStrategy = require("./data/site-strategy");
 const quoteRouter = require("./routes/quotes");
 
 const app = express();
@@ -12,8 +13,15 @@ const PORT = process.env.PORT || 3000;
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+app.locals.siteStrategy = siteStrategy;
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path;
+  next();
+});
 
 const services = {
   "managed-vpn": {
@@ -22,7 +30,7 @@ const services = {
       "Secure site-to-site VPN and remote access solutions for homes and small businesses.",
   },
   "private-cloud": {
-    title: "Private Cloud Services",
+    title: "Managed Backup & Secure File Access",
     description:
       "Private cloud storage, backup, and infrastructure services for businesses that want control over their data.",
   },
@@ -135,6 +143,14 @@ app.get("/locations/:city", (req, res) => {
     metaDescription: location.description,
     location,
     services,
+  });
+});
+
+app.get("/how-we-work", (req, res) => {
+  res.render("how-we-work", {
+    pageTitle: "Business Uptime Assessment & Service Process",
+    metaDescription:
+      "See how ReadyTech qualifies, assesses, proposes, installs, documents, monitors, and supports business-critical connectivity.",
   });
 });
 

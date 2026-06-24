@@ -8,44 +8,111 @@
     <main>
       <section class="hero">
         <div class="container">
-          <p class="eyebrow">Austin • Manor • Houston</p>
-          <h1>Private Infrastructure for Homes and Small Businesses</h1>
-          <p>
-            Managed VPN, private cloud, network monitoring, secure Wi-Fi, and
-            backup internet built for businesses that need control, uptime, and
-            security.
-          </p>
+          <p class="eyebrow"><%= siteStrategy.brand.category %></p>
+          <h1><%= siteStrategy.brand.hero %></h1>
+          <p><%= siteStrategy.brand.positioning %></p>
+
           <div class="hero-actions">
-            <a href="/pricing" class="button">View Pricing</a>
-            <a href="/contact" class="button secondary">Request Consultation</a>
+            <a href="<%= siteStrategy.ctas.primary.href %>" class="button">
+              <%= siteStrategy.ctas.primary.label %>
+            </a>
+
+            <a href="<%= siteStrategy.ctas.secondary.href %>" class="button secondary">
+              <%= siteStrategy.ctas.secondary.label %>
+            </a>
           </div>
         </div>
       </section>
 
       <section class="container section">
-        <h2>Core Services</h2>
+        <p class="eyebrow">Three service pillars</p>
+        <h2>One operating model for business-critical connectivity</h2>
 
         <div class="grid">
-          <article class="card">
-            <h3>Managed VPN</h3>
-            <p>Secure remote access and site-to-site VPN for offices, home labs, and small businesses.</p>
-          </article>
+          <% siteStrategy.pillars.forEach(function (pillar) { %>
+            <article class="card">
+              <h3><%= pillar.title %></h3>
+              <p><strong><%= pillar.outcome %></strong></p>
+              <p><%= pillar.description %></p>
 
-          <article class="card">
-            <h3>Private Cloud</h3>
-            <p>Private storage, backup, and controlled infrastructure for your business data.</p>
-          </article>
-
-          <article class="card">
-            <h3>Network Monitoring</h3>
-            <p>Monitor internet uptime, firewalls, switches, access points, and business-critical devices.</p>
-          </article>
-
-          <article class="card">
-            <h3>Backup Internet</h3>
-            <p>LTE and 5G failover options to keep your site online during outages.</p>
-          </article>
+              <ul>
+                <% pillar.links.forEach(function (service) { %>
+                  <li>
+                    <a href="<%= service.href %>"><%= service.label %></a>
+                  </li>
+                <% }); %>
+              </ul>
+            </article>
+          <% }); %>
         </div>
+      </section>
+
+      <section class="container section">
+        <p class="eyebrow">Flagship offers</p>
+        <h2>Start with the right level of protection</h2>
+
+        <div class="pricing-grid">
+          <% siteStrategy.flagshipOffers.forEach(function (offer) { %>
+            <article class="price-card">
+              <h3><%= offer.title %></h3>
+              <p class="price"><%= offer.price %></p>
+              <p><%= offer.priceNote %></p>
+              <p><%= offer.description %></p>
+
+              <ul>
+                <% offer.includes.forEach(function (item) { %>
+                  <li><%= item %></li>
+                <% }); %>
+              </ul>
+
+              <% if (offer.note) { %>
+                <p><small><%= offer.note %></small></p>
+              <% } %>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section">
+        <article class="card featured-panel">
+          <p class="eyebrow">Restaurant specialization</p>
+          <h2><%= siteStrategy.restaurantAddOn.title %></h2>
+          <p class="price"><%= siteStrategy.restaurantAddOn.price %></p>
+          <p><%= siteStrategy.restaurantAddOn.description %></p>
+          <p><%= siteStrategy.restaurantAddOn.typicalTotal %></p>
+
+          <a href="/services/restaurant-technology" class="button">
+            Explore Restaurant Services
+          </a>
+        </article>
+      </section>
+
+      <section id="service-areas" class="container section">
+        <p class="eyebrow">Service areas</p>
+        <h2>Onsite where we are strongest. Scheduled support where we extend.</h2>
+
+        <div class="grid">
+          <% siteStrategy.serviceAreas.forEach(function (area) { %>
+            <article class="card">
+              <h3><%= area.title %></h3>
+              <p><strong><%= area.type %></strong></p>
+              <p><%= area.description %></p>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section">
+        <article class="card">
+          <p class="eyebrow">Built for local operators</p>
+          <h2>Restaurant-led, but not restaurant-only</h2>
+          <p>
+            ReadyTech is built for independent restaurants, fast-casual
+            operators, retailers, and service businesses with one to five
+            locations and no internal IT department.
+          </p>
+          <p><strong><%= siteStrategy.brand.tagline %></strong></p>
+        </article>
       </section>
     </main>
 

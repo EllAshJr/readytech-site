@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <p class="eyebrow">The ReadyTech service process</p>
+          <h1>Assess first. Install correctly. Monitor what matters.</h1>
+          <p>
+            Every customer follows a consistent process designed to reduce
+            surprises, document the environment, and protect business uptime.
+          </p>
+
+          <div class="hero-actions">
+            <a href="<%= siteStrategy.ctas.primary.href %>" class="button">
+              <%= siteStrategy.ctas.primary.label %>
+            </a>
+
+            <a href="<%= siteStrategy.ctas.secondary.href %>" class="button secondary">
+              <%= siteStrategy.ctas.secondary.label %>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="container section">
+        <h2>How ReadyTech works</h2>
+
+        <div class="grid">
+          <% siteStrategy.process.forEach(function (step) { %>
+            <article class="card">
+              <p class="eyebrow"><%= step.number %></p>
+              <h3><%= step.title %></h3>
+              <p><%= step.description %></p>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section">
+        <article class="card">
+          <p class="eyebrow">Three-option proposal</p>
+          <h2>Good, Better, or Best</h2>
+
+          <div class="grid">
+            <div>
+              <h3>Good</h3>
+              <p>Fix the immediate business problem.</p>
+            </div>
+
+            <div>
+              <h3>Better</h3>
+              <p>Fix the issue and monitor the environment.</p>
+            </div>
+
+            <div>
+              <h3>Best</h3>
+              <p>Fix, monitor, and provide business continuity.</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="container section">
+        <article class="card featured-panel">
+          <p class="eyebrow">Support boundaries</p>
+          <h2><%= siteStrategy.supportBoundary.headline %></h2>
+
+          <ul>
+            <% siteStrategy.supportBoundary.statements.forEach(function (statement) { %>
+              <li><%= statement %></li>
+            <% }); %>
+          </ul>
+        </article>
+      </section>
+
+      <section class="container section">
+        <h2>Service-area model</h2>
+
+        <div class="grid">
+          <% siteStrategy.serviceAreas.forEach(function (area) { %>
+            <article class="card">
+              <h3><%= area.title %></h3>
+              <p><strong><%= area.type %></strong></p>
+              <p><%= area.description %></p>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

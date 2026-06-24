@@ -1,32 +1,76 @@
+<%
+  const selectedSeo =
+    siteStrategy.seoByPath[currentPath] || {
+      title: pageTitle || "ReadyTech",
+      description: metaDescription || siteStrategy.brand.positioning,
+    };
+
+  const canonicalPath = currentPath === "/" ? "" : currentPath;
+  const canonicalUrl = `${siteStrategy.siteUrl}${canonicalPath}`;
+
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": siteStrategy.brand.name,
+    "url": siteStrategy.siteUrl,
+    "description": siteStrategy.brand.positioning,
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Austin",
+      },
+      {
+        "@type": "City",
+        "name": "Manor",
+      },
+      {
+        "@type": "City",
+        "name": "Houston",
+      },
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "ReadyTech Business Uptime Services",
+      "itemListElement": siteStrategy.pillars.map(function (pillar) {
+        return {
+          "@type": "OfferCatalog",
+          "name": pillar.title,
+          "itemListElement": pillar.links.map(function (service) {
+            return {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": service.label,
+              },
+            };
+          }),
+        };
+      }),
+    },
+  };
+%>
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title><%= pageTitle %> | ReadyTech</title>
-  <meta name="description" content="<%= metaDescription %>" />
+  <title><%= selectedSeo.title %></title>
+
+  <meta
+    name="description"
+    content="<%= selectedSeo.description %>"
+  />
+
+  <link rel="canonical" href="<%= canonicalUrl %>" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="<%= selectedSeo.title %>" />
+  <meta property="og:description" content="<%= selectedSeo.description %>" />
+  <meta property="og:url" content="<%= canonicalUrl %>" />
+  <meta property="og:site_name" content="ReadyTech" />
 
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/quote.css" />
 
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "ReadyTech",
-      "url": "https://readytechinstalls.com",
-      "description": "Secure networking, managed VPN, private cloud, network monitoring, Wi‑Fi, backup internet, and restaurant technology services.",
-      "areaServed": ["Austin TX", "Manor TX", "Houston TX"],
-      "serviceType": [
-        "Managed VPN",
-        "Private Cloud",
-        "Network Monitoring",
-        "Business Wi‑Fi",
-        "Backup Internet",
-        "Restaurant Technology Services",
-        "POS Integration",
-        "Guest Wi‑Fi Marketing",
-        "Restaurant Monitoring"
-      ]
-    }
-  </script>
+  <script type="application/ld+json"><%- JSON.stringify(localBusinessSchema) %></script>
 </head>

@@ -6,30 +6,59 @@
     <%- include("partials/header") %>
 
     <main class="container section services-page">
-      <h1>ReadyTech Services</h1>
-      <p>
-        Secure networking, managed VPN, private cloud, Wi‑Fi, monitoring,
-        backup internet, and restaurant technology services for Austin, Manor,
-        and Houston.
+      <p class="eyebrow">Managed business connectivity</p>
+      <h1>Connect it. Monitor it. Keep it operating.</h1>
+
+      <p class="lead">
+        ReadyTech organizes its services around business outcomes—not a long
+        catalog of disconnected technical products.
       </p>
 
       <div class="grid services-grid">
-        <% Object.keys(services).forEach(function(slug) { %>
-          <% const startingPrice = (typeof pricingData !== "undefined" && pricingData.anchorMap) ? pricingData.anchorMap[slug] : null; %>
+        <% siteStrategy.pillars.forEach(function (pillar) { %>
+          <article class="card service-card">
+            <h2><%= pillar.title %></h2>
+            <p><strong><%= pillar.outcome %></strong></p>
+            <p><%= pillar.description %></p>
 
-          <article class="card service-card service-card-<%= slug %>">
-            <h2><%= services[slug].title %></h2>
-
-            <% if (startingPrice) { %>
-              <p class="service-price-anchor"><%= startingPrice %></p>
-            <% } %>
-
-            <p><%= services[slug].description %></p>
-            <a href="/services/<%= slug %>">Learn more</a>
-            <%- include("partials/instant-quote-button", { serviceSlug: slug }) %>
+            <ul>
+              <% pillar.links.forEach(function (service) { %>
+                <li>
+                  <a href="<%= service.href %>"><%= service.label %></a>
+                </li>
+              <% }); %>
+            </ul>
           </article>
         <% }); %>
       </div>
+
+      <section class="section">
+        <article class="card featured-panel">
+          <p class="eyebrow">Recommended first step</p>
+          <h2>ReadyTech Uptime Assessment</h2>
+          <p class="price">$349</p>
+          <p>
+            Identify the connectivity risks that could interrupt payments,
+            orders, Wi-Fi, remote access, or business operations.
+          </p>
+
+          <div class="hero-actions">
+            <a href="<%= siteStrategy.ctas.primary.href %>" class="button">
+              Book the Assessment
+            </a>
+
+            <a href="<%= siteStrategy.ctas.secondary.href %>" class="button secondary">
+              Get an Instant Estimate
+            </a>
+          </div>
+        </article>
+      </section>
+
+      <section class="section">
+        <article class="service-note">
+          <%= siteStrategy.pricingNotice %>
+        </article>
+      </section>
     </main>
 
     <%- include("partials/footer") %>
