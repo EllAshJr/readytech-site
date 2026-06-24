@@ -1769,3 +1769,88 @@ a:hover {
     min-width: 620px;
   }
 }
+
+/* READYTECH FLAGSHIP OFFER UPDATE */
+
+@media (min-width: 1100px) {
+  .flagship-offers-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Make ReadyContinuity Pro visually prominent. */
+.flagship-featured {
+  position: relative;
+  z-index: 2;
+  border: 2px solid var(--accent, #e58336);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(229, 131, 54, 0.17),
+      rgba(22, 27, 34, 0.98) 48%
+    );
+  box-shadow:
+    0 20px 44px rgba(229, 131, 54, 0.2),
+    0 0 0 1px rgba(246, 161, 95, 0.18);
+  transform: translateY(-7px);
+}
+
+.flagship-featured::before {
+  content: "Recommended";
+  position: absolute;
+  top: -14px;
+  right: 18px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--accent, #e58336);
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.flagship-featured .price {
+  color: var(--accent-light, #f6a15f);
+}
+
+/* Keep the navbar assessment text white in every state. */
+.site-header .nav-assessment-button,
+.site-header .nav-assessment-button:link,
+.site-header .nav-assessment-button:visited,
+.site-header .nav-assessment-button:hover,
+.site-header .nav-assessment-button:focus,
+.site-header .nav-assessment-button:focus-visible,
+.site-header .nav-assessment-button:active {
+  color: #ffffff !important;
+}
+
+@media (max-width: 760px) {
+  .flagship-featured {
+    transform: none;
+  }
+}
+
+/* END READYTECH FLAGSHIP OFFER UPDATE */
+
+/* Darker Book Assessment navbar button */
+.site-header .nav-assessment-button,
+.site-header .nav-assessment-button:link,
+.site-header .nav-assessment-button:visited {
+  background: #0b0f14 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid #242a33 !important;
+  box-shadow: none !important;
+}
+
+.site-header .nav-assessment-button:hover,
+.site-header .nav-assessment-button:focus,
+.site-header .nav-assessment-button:focus-visible,
+.site-header .nav-assessment-button:active {
+  background: #131922 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border-color: var(--accent, #e58336) !important;
+}
