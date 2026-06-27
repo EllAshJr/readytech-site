@@ -38,6 +38,8 @@ postgresql://readytech:readytechdev@localhost:5432/readytech_dev
 
 Production Render should use Render internal PostgreSQL URL.
 
+Use DATABASE_SSL=false for local PostgreSQL and Render internal PostgreSQL. Use DATABASE_SSL=true only when connecting locally to a Render external database URL.
+
 ## Deployment
 
 GitHub repo:

@@ -21,17 +21,17 @@ secrets
 
 ## Standard Checks
 
-node -c server.js
+npm run check:syntax
 
-node -c routes/quotes.js
+npm run sales:test
 
-node -c routes/sales.js
+Or run both:
 
-node -c services/estimate-engine.js
+npm run check
 
-node -c services/sales-recommendation-engine.js
+npm run check:syntax covers the main server, routes, services, public JavaScript, and helper scripts. npm run sales:test compiles Sales Coach EJS templates and exercises the recommendation engine.
 
-EJS compile checks for edited templates.
+Run EJS compile checks for any other edited templates.
 
 ## Common Local Test
 
