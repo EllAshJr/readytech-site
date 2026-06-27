@@ -1,0 +1,17 @@
+<header class="sales-app-header">
+  <div class="sales-app-nav">
+    <a href="/sales" class="sales-app-brand">
+      <span>Ready</span><strong>Tech</strong> Sales Coach
+    </a>
+
+    <nav aria-label="Sales application">
+      <a href="/sales">Dashboard</a>
+      <a href="/sales/reference">Quick Reference</a>
+
+      <form action="/sales/logout" method="POST" class="sales-inline-form">
+        <input type="hidden" name="_csrf" value="<%= salesCsrf %>" />
+        <button type="submit" class="sales-link-button">Log out</button>
+      </form>
+    </nav>
+  </div>
+</header>

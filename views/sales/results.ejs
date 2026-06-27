@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body class="sales-app-body">
+    <%- include("partials/nav") %>
+
+    <main class="sales-app-container sales-results-page" id="sales-plan">
+      <section class="sales-results-hero">
+        <div>
+          <p class="sales-eyebrow">Completed sales plan</p>
+          <h1><%= consultation.business_name || consultation.consultation_number %></h1>
+          <p>
+            <strong><%= consultation.consultation_number %></strong> ·
+            Salesperson: <%= consultation.salesperson_name %> ·
+            Customer: <%= consultation.customer_name || "Not provided" %>
+          </p>
+        </div>
+
+        <div class="sales-results-actions no-print">
+          <button type="button" class="sales-secondary-button" data-copy-sales-plan>Copy Summary</button>
+          <button type="button" class="sales-secondary-button" onclick="window.print()">Print / PDF</button>
+          <form action="/sales/consultations/<%= consultation.id %>/email" method="POST">
+            <input type="hidden" name="_csrf" value="<%= salesCsrf %>" />
+            <button type="submit" class="sales-primary-button">Email Plan to Me</button>
+          </form>
+        </div>
+      </section>
+
+      <% if (emailStatus === "sent") { %>
+        <div class="sales-alert sales-alert-success">The sales plan was emailed to <%= consultation.salesperson_email %>.</div>
+      <% } else if (emailStatus === "skipped") { %>
+        <div class="sales-alert sales-alert-warning">Email is not configured locally. Use Copy Summary or Print / PDF.</div>
+      <% } else if (emailStatus === "failed") { %>
+        <div class="sales-alert sales-alert-error">The sales plan was saved, but the email could not be sent. Check Resend configuration and try again.</div>
+      <% } %>
+
+      <section class="sales-score-grid">
+        <article class="sales-score-card">
+          <span>Lead fit</span>
+          <strong><%= analysis.leadFit %></strong>
+          <small><%= analysis.leadScore %> / 5</small>
+        </article>
+        <article class="sales-score-card">
+          <span>Business impact</span>
+          <strong><%= analysis.impactLevel %></strong>
+          <small><%= analysis.impactScore %> / 100</small>
+        </article>
+        <article class="sales-score-card">
+          <span>Monitored scope</span>
+          <strong><%= analysis.monitoredDevices %></strong>
+          <small>devices</small>
+        </article>
+        <article class="sales-score-card">
+          <span>Territory</span>
+          <strong><%= analysis.territory.label %></strong>
+          <small><%= consultation.city || "Not entered" %></small>
+        </article>
+      </section>
+
+      <section class="sales-recommendation-grid">
+        <article class="sales-panel sales-recommendation-primary">
+          <p class="sales-eyebrow">Primary recommendation</p>
+          <h2><%= analysis.primaryRecommendation.title %></h2>
+          <p class="sales-plan-price"><%= analysis.primaryRecommendation.price %></p>
+          <ul>
+            <% analysis.primaryRecommendation.reasons.forEach(function (reason) { %>
+              <li><%= reason %></li>
+            <% }); %>
+          </ul>
+          <div class="sales-talk-track">
+            <strong>Recommended talk track</strong>
+            <p><%= analysis.primaryRecommendation.talkTrack %></p>
+          </div>
+        </article>
+
+        <article class="sales-panel">
+          <p class="sales-eyebrow">Entry offer</p>
+          <h2><%= analysis.entryOffer.title %></h2>
+          <p class="sales-plan-price"><%= analysis.entryOffer.price %></p>
+          <p><%= analysis.entryOffer.baseReason %></p>
+        </article>
+      </section>
+
+      <section class="sales-panel sales-next-step-panel">
+        <p class="sales-eyebrow">Do this next</p>
+        <h2><%= analysis.nextStep.title %></h2>
+        <p><%= analysis.nextStep.reason %></p>
+        <ol>
+          <% analysis.nextStep.actions.forEach(function (action) { %>
+            <li><%= action %></li>
+          <% }); %>
+        </ol>
+      </section>
+
+      <section class="sales-panel">
+        <div class="sales-panel-heading">
+          <div>
+            <p class="sales-eyebrow">Proposal direction</p>
+            <h2>Good / Better / Best</h2>
+          </div>
+        </div>
+
+        <div class="sales-option-grid">
+          <% analysis.goodBetterBest.forEach(function (option) { %>
+            <article class="sales-option-card <%= option.name === 'Better' ? 'is-recommended' : '' %>">
+              <span><%= option.name %></span>
+              <h3><%= option.purpose %></h3>
+              <p><%= option.recommendation %></p>
+              <strong><%= option.price %></strong>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="sales-two-column">
+        <article class="sales-panel">
+          <h2>Survey & Engineering</h2>
+          <p><strong>Site survey required:</strong> <%= analysis.surveyRequired ? "Yes" : "No" %></p>
+          <p><strong>Engineering review required:</strong> <%= analysis.engineeringRequired ? "Yes" : "No" %></p>
+
+          <% if (analysis.surveyReasons.length) { %>
+            <h3>Survey reasons</h3>
+            <ul>
+              <% analysis.surveyReasons.forEach(function (reason) { %><li><%= reason %></li><% }); %>
+            </ul>
+          <% } %>
+
+          <% if (analysis.engineeringReasons.length) { %>
+            <h3>Engineering reasons</h3>
+            <ul>
+              <% analysis.engineeringReasons.forEach(function (reason) { %><li><%= reason %></li><% }); %>
+            </ul>
+          <% } %>
+        </article>
+
+        <article class="sales-panel">
+          <h2>Cross-Sell Opportunities</h2>
+          <% if (analysis.crossSells.length) { %>
+            <ul>
+              <% analysis.crossSells.forEach(function (item) { %><li><%= item %></li><% }); %>
+            </ul>
+          <% } else { %>
+            <p>No additional cross-sell was identified.</p>
+          <% } %>
+
+          <h3>Objection guidance</h3>
+          <p><%= analysis.objectionGuidance %></p>
+        </article>
+      </section>
+
+      <section class="sales-two-column">
+        <article class="sales-panel">
+          <h2>Missing Information</h2>
+          <% if (analysis.missingInformation.length) { %>
+            <ul>
+              <% analysis.missingInformation.forEach(function (item) { %><li><%= item %></li><% }); %>
+            </ul>
+          <% } else { %>
+            <p>No major discovery gaps were identified.</p>
+          <% } %>
+        </article>
+
+        <article class="sales-panel">
+          <h2>Territory Guidance</h2>
+          <p><strong><%= analysis.territory.label %></strong></p>
+          <p><%= analysis.territory.summary %></p>
+        </article>
+      </section>
+
+      <section class="sales-panel">
+        <h2>Pricing & Promise Controls</h2>
+        <p><%= analysis.pricingStatement %></p>
+        <p><%= analysis.supportBoundary %></p>
+
+        <div class="sales-rate-grid">
+          <div><span>Assessment</span><strong><%= analysis.approvedPricing.assessment %></strong></div>
+          <div><span>Remote</span><strong><%= analysis.approvedPricing.remote %></strong></div>
+          <div><span>Onsite</span><strong><%= analysis.approvedPricing.onsite %></strong></div>
+          <div><span>After hours</span><strong><%= analysis.approvedPricing.afterHours %></strong></div>
+        </div>
+      </section>
+
+      <section class="sales-two-column">
+        <article class="sales-panel">
+          <h2>Handoff Checklist</h2>
+          <ul>
+            <% analysis.handoffChecklist.forEach(function (item) { %><li><%= item %></li><% }); %>
+          </ul>
+        </article>
+
+        <article class="sales-panel">
+          <h2>Follow-Up Cadence</h2>
+          <ol>
+            <% analysis.followUpCadence.forEach(function (item) { %><li><%= item %></li><% }); %>
+          </ol>
+        </article>
+      </section>
+
+      <section class="sales-panel sales-customer-record">
+        <h2>Customer Record</h2>
+        <dl>
+          <div><dt>Customer</dt><dd><%= consultation.customer_name || "Not provided" %></dd></div>
+          <div><dt>Business</dt><dd><%= consultation.business_name || "Not provided" %></dd></div>
+          <div><dt>Email</dt><dd><%= consultation.customer_email || "Not provided" %></dd></div>
+          <div><dt>Phone</dt><dd><%= consultation.customer_phone || "Not provided" %></dd></div>
+          <div><dt>Business type</dt><dd><%= consultation.business_type || "Not provided" %></dd></div>
+          <div><dt>City</dt><dd><%= consultation.city || "Not provided" %></dd></div>
+        </dl>
+      </section>
+
+      <textarea class="sales-copy-source" aria-hidden="true" tabindex="-1"><%= [
+        `ReadyTech Sales Plan: ${consultation.consultation_number}`,
+        `Business: ${consultation.business_name || "Not provided"}`,
+        `Customer: ${consultation.customer_name || "Not provided"}`,
+        `Lead fit: ${analysis.leadFit} (${analysis.leadScore}/5)`,
+        `Impact: ${analysis.impactLevel} (${analysis.impactScore}/100)`,
+        `Primary recommendation: ${analysis.primaryRecommendation.title} — ${analysis.primaryRecommendation.price}`,
+        `Why: ${analysis.primaryRecommendation.reasons.join("; ")}`,
+        `Next step: ${analysis.nextStep.title}`,
+        `Next-step reason: ${analysis.nextStep.reason}`,
+        `Actions: ${analysis.nextStep.actions.join("; ")}`,
+        `Survey required: ${analysis.surveyRequired ? "Yes" : "No"}`,
+        `Engineering required: ${analysis.engineeringRequired ? "Yes" : "No"}`,
+        `Cross-sells: ${analysis.crossSells.join("; ") || "None"}`,
+        `Objection guidance: ${analysis.objectionGuidance}`,
+        `Pricing note: ${analysis.pricingStatement}`,
+      ].join("\n") %></textarea>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

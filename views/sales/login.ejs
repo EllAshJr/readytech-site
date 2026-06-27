@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body class="sales-login-body">
+    <main class="sales-login-shell">
+      <section class="sales-login-card">
+        <p class="sales-eyebrow">Internal sales application</p>
+        <h1>ReadyTech Sales Coach</h1>
+        <p>
+          Follow the guided discovery process, let the application calculate
+          the recommendation, and receive the completed sales plan by email.
+        </p>
+
+        <% if (error) { %>
+          <div class="sales-alert sales-alert-error"><%= error %></div>
+        <% } %>
+
+        <form action="/sales/login" method="POST" class="sales-form">
+          <input type="hidden" name="returnTo" value="<%= returnTo %>" />
+
+          <label>
+            Your name
+            <input type="text" name="salesperson_name" required autocomplete="name" />
+          </label>
+
+          <label>
+            Your work email
+            <input type="email" name="salesperson_email" required autocomplete="email" />
+          </label>
+
+          <label>
+            Username
+            <input type="text" name="username" required autocomplete="username" />
+          </label>
+
+          <label>
+            Password
+            <input type="password" name="password" required autocomplete="current-password" />
+          </label>
+
+          <button type="submit" class="sales-primary-button">Log in</button>
+        </form>
+
+        <% if (showDefaultHint) { %>
+          <div class="sales-dev-hint">
+            <strong>Local-development login:</strong>
+            <code>sales</code> / <code>readytech</code>
+          </div>
+        <% } %>
+
+        <p class="sales-security-note">
+          The shared login is temporary. Use Render environment variables and
+          replace it with individual accounts before scaling the sales team.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

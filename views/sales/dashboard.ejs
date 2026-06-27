@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body class="sales-app-body">
+    <%- include("partials/nav") %>
+
+    <main class="sales-app-container">
+      <section class="sales-hero-row">
+        <div>
+          <p class="sales-eyebrow">Welcome, <%= salesSession.name %></p>
+          <h1>Sell the outcome. Let the application handle the logic.</h1>
+          <p>
+            Every consultation starts with the same qualification card, then
+            pivots into ReadyConnect, ReadyUptime, ReadyOps, scoping,
+            escalation, and closing based on the customer’s answers.
+          </p>
+        </div>
+
+        <form action="/sales/consultations" method="POST">
+          <input type="hidden" name="_csrf" value="<%= salesCsrf %>" />
+          <button type="submit" class="sales-primary-button sales-large-button">
+            Start New Consultation
+          </button>
+        </form>
+      </section>
+
+      <section class="sales-stat-grid">
+        <article class="sales-stat-card">
+          <span>Standard starting point</span>
+          <strong>15-minute qualification</strong>
+        </article>
+        <article class="sales-stat-card">
+          <span>Primary entry offer</span>
+          <strong>$349 Uptime Assessment</strong>
+        </article>
+        <article class="sales-stat-card">
+          <span>Recommended managed plan</span>
+          <strong>ReadyContinuity Pro</strong>
+        </article>
+        <article class="sales-stat-card">
+          <span>Sales report delivery</span>
+          <strong><%= salesSession.email %></strong>
+        </article>
+      </section>
+
+      <section class="sales-panel">
+        <div class="sales-panel-heading">
+          <div>
+            <p class="sales-eyebrow">Recent work</p>
+            <h2>Consultations</h2>
+          </div>
+          <a href="/sales/reference" class="sales-secondary-button">Open Sales Quick Reference</a>
+        </div>
+
+        <% if (!consultations.length) { %>
+          <div class="sales-empty-state">
+            <h3>No consultations yet</h3>
+            <p>Start the first guided customer conversation.</p>
+          </div>
+        <% } else { %>
+          <div class="sales-table-wrap">
+            <table class="sales-table">
+              <thead>
+                <tr>
+                  <th>Consultation</th>
+                  <th>Business</th>
+                  <th>Status</th>
+                  <th>Current card</th>
+                  <th>Updated</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% consultations.forEach(function (item) { %>
+                  <tr>
+                    <td><%= item.consultation_number %></td>
+                    <td><%= item.business_name || "Not entered" %></td>
+                    <td><span class="sales-status sales-status-<%= item.status %>"><%= item.status.replaceAll("_", " ") %></span></td>
+                    <td><%= item.current_card %> / 12</td>
+                    <td><%= new Date(item.updated_at).toLocaleString() %></td>
+                    <td>
+                      <% if (item.status === "completed") { %>
+                        <a href="/sales/consultations/<%= item.id %>/results">View plan</a>
+                      <% } else { %>
+                        <a href="/sales/consultations/<%= item.id %>/card/<%= item.current_card || 1 %>">Continue</a>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </section>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

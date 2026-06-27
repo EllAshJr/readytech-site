@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body class="sales-app-body">
+    <%- include("partials/nav") %>
+
+    <main class="sales-app-container sales-wizard-layout">
+      <aside class="sales-progress-panel" aria-label="Consultation progress">
+        <p class="sales-eyebrow">Consultation</p>
+        <h2><%= consultation.consultation_number %></h2>
+
+        <ol class="sales-progress-list">
+          <% cards.forEach(function (item) { %>
+            <% const inSequence = sequence.includes(item.id); %>
+            <li class="<%= item.id === card.id ? 'is-current' : '' %> <%= !inSequence ? 'is-skipped' : '' %>">
+              <% if (inSequence) { %>
+                <a href="/sales/consultations/<%= consultation.id %>/card/<%= item.id %>">
+                  <span><%= item.id %></span>
+                  <%= item.title %>
+                </a>
+              <% } else { %>
+                <span class="sales-progress-disabled">
+                  <span><%= item.id %></span>
+                  <%= item.title %>
+                </span>
+              <% } %>
+            </li>
+          <% }); %>
+        </ol>
+      </aside>
+
+      <section class="sales-wizard-main">
+        <div class="sales-card-heading">
+          <p class="sales-eyebrow">Card <%= card.id %> of 12</p>
+          <h1><%= card.title %></h1>
+          <p><%= card.goal %></p>
+        </div>
+
+        <form
+          action="/sales/consultations/<%= consultation.id %>/card/<%= card.id %>"
+          method="POST"
+          class="sales-form sales-question-form"
+        >
+          <input type="hidden" name="_csrf" value="<%= salesCsrf %>" />
+
+          <div class="sales-question-grid">
+            <% card.questions.forEach(function (question) { %>
+              <% const value = answers[question.name]; %>
+
+              <% if (question.type === "checkbox-group") { %>
+                <fieldset class="sales-question sales-question-wide">
+                  <legend><%= question.label %></legend>
+                  <% if (question.help) { %><p class="sales-field-help"><%= question.help %></p><% } %>
+                  <div class="sales-choice-grid">
+                    <% question.options.forEach(function (choice) { %>
+                      <label class="sales-choice-card">
+                        <input
+                          type="checkbox"
+                          name="<%= question.name %>"
+                          value="<%= choice.value %>"
+                          <%= Array.isArray(value) && value.includes(choice.value) ? "checked" : "" %>
+                        />
+                        <span><%= choice.label %></span>
+                      </label>
+                    <% }); %>
+                  </div>
+                </fieldset>
+
+              <% } else if (question.type === "textarea") { %>
+                <label class="sales-question sales-question-wide">
+                  <span><%= question.label %><%= question.required ? " *" : "" %></span>
+                  <% if (question.help) { %><small><%= question.help %></small><% } %>
+                  <textarea
+                    name="<%= question.name %>"
+                    rows="<%= question.rows || 4 %>"
+                    <%= question.required ? "required" : "" %>
+                  ><%= value || "" %></textarea>
+                </label>
+
+              <% } else if (question.type === "select") { %>
+                <label class="sales-question">
+                  <span><%= question.label %><%= question.required ? " *" : "" %></span>
+                  <% if (question.help) { %><small><%= question.help %></small><% } %>
+                  <select name="<%= question.name %>" <%= question.required ? "required" : "" %>>
+                    <option value="">Choose one</option>
+                    <% question.options.forEach(function (choice) { %>
+                      <option value="<%= choice.value %>" <%= String(value || "") === choice.value ? "selected" : "" %>>
+                        <%= choice.label %>
+                      </option>
+                    <% }); %>
+                  </select>
+                </label>
+
+              <% } else { %>
+                <label class="sales-question">
+                  <span><%= question.label %><%= question.required ? " *" : "" %></span>
+                  <% if (question.help) { %><small><%= question.help %></small><% } %>
+                  <input
+                    type="<%= question.type %>"
+                    name="<%= question.name %>"
+                    value="<%= value ?? "" %>"
+                    <%= question.required ? "required" : "" %>
+                    <%= question.min !== undefined ? `min="${question.min}"` : "" %>
+                    <%= question.max !== undefined ? `max="${question.max}"` : "" %>
+                    <%= question.step !== undefined ? `step="${question.step}"` : "" %>
+                  />
+                </label>
+              <% } %>
+            <% }); %>
+          </div>
+
+          <div class="sales-form-actions">
+            <% if (previousCardId) { %>
+              <button type="submit" name="action" value="back" class="sales-secondary-button">Back</button>
+            <% } %>
+
+            <button type="submit" name="action" value="save" class="sales-text-button">Save & Exit</button>
+
+            <% if (card.id === 12) { %>
+              <button type="submit" name="action" value="complete" class="sales-primary-button">
+                Complete & Email Sales Plan
+              </button>
+            <% } else { %>
+              <button type="submit" name="action" value="next" class="sales-primary-button">
+                Continue to Recommended Card
+              </button>
+            <% } %>
+          </div>
+        </form>
+      </section>
+
+      <aside class="sales-coach-panel">
+        <section class="sales-coach-card sales-coach-primary">
+          <p class="sales-eyebrow">Say this</p>
+          <blockquote><%= card.sayThis %></blockquote>
+        </section>
+
+        <section class="sales-coach-card">
+          <h3>Listen for</h3>
+          <ul>
+            <% card.listenFor.forEach(function (item) { %>
+              <li><%= item %></li>
+            <% }); %>
+          </ul>
+        </section>
+
+        <section class="sales-coach-card">
+          <p class="sales-eyebrow">Current direction</p>
+          <h3><%= analysis.primaryRecommendation.title %></h3>
+          <p><%= analysis.primaryRecommendation.price %></p>
+          <p><%= analysis.primaryRecommendation.reasons[0] || analysis.primaryRecommendation.baseReason %></p>
+        </section>
+
+        <section class="sales-coach-card">
+          <h3>Likely next step</h3>
+          <p><strong><%= analysis.nextStep.title %></strong></p>
+          <p><%= analysis.nextStep.reason %></p>
+        </section>
+
+        <% if (analysis.engineeringRequired || analysis.surveyRequired) { %>
+          <section class="sales-coach-card sales-coach-warning">
+            <h3>Do not overpromise</h3>
+            <p>
+              <%= analysis.engineeringRequired ? "Engineering review is likely required." : "A site survey is likely required." %>
+            </p>
+          </section>
+        <% } %>
+      </aside>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

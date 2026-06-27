@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body class="sales-app-body">
+    <%- include("partials/nav") %>
+
+    <main class="sales-app-container">
+      <section class="sales-card-heading">
+        <p class="sales-eyebrow">Daily sales reference</p>
+        <h1>ReadyTech Sales Quick Reference</h1>
+        <p>
+          Use the guided application during customer conversations. Use this
+          page to refresh approved positioning, prices, escalation rules, and
+          prospecting language.
+        </p>
+      </section>
+
+      <section class="sales-reference-grid">
+        <article class="sales-panel">
+          <h2>Positioning</h2>
+          <blockquote><%= quickReference.positioning %></blockquote>
+          <p><strong>Support promise:</strong> <%= quickReference.supportPromise %></p>
+          <p><strong>Primary close:</strong> <%= quickReference.primaryClose %></p>
+          <p><strong>Funnel:</strong> <%= quickReference.funnel %></p>
+        </article>
+
+        <article class="sales-panel">
+          <h2>Flagship Prices</h2>
+          <dl class="sales-reference-list">
+            <div><dt>Uptime Assessment</dt><dd><%= quickReference.pricing.assessment %></dd></div>
+            <div><dt>ReadyConnect Foundation</dt><dd><%= quickReference.pricing.foundation %></dd></div>
+            <div><dt>ReadyUptime Managed</dt><dd><%= quickReference.pricing.uptime %></dd></div>
+            <div><dt>ReadyContinuity Pro</dt><dd><%= quickReference.pricing.continuity %></dd></div>
+            <div><dt>Restaurant Add-on</dt><dd><%= quickReference.pricing.restaurantAddOn %></dd></div>
+          </dl>
+        </article>
+
+        <article class="sales-panel">
+          <h2>Standard Rates</h2>
+          <dl class="sales-reference-list">
+            <div><dt>Remote</dt><dd><%= quickReference.pricing.remote %></dd></div>
+            <div><dt>Onsite</dt><dd><%= quickReference.pricing.onsite %></dd></div>
+            <div><dt>After hours</dt><dd><%= quickReference.pricing.afterHours %></dd></div>
+            <div><dt>Labor deposit</dt><dd><%= quickReference.pricing.laborDeposit %></dd></div>
+            <div><dt>Hardware</dt><dd><%= quickReference.pricing.hardwareDeposit %></dd></div>
+          </dl>
+        </article>
+
+        <article class="sales-panel">
+          <h2>Territory</h2>
+          <ul>
+            <% quickReference.territory.forEach(function (item) { %><li><%= item %></li><% }); %>
+          </ul>
+        </article>
+      </section>
+
+      <section class="sales-panel">
+        <p class="sales-eyebrow">Prospecting</p>
+        <h2>Outcome-First Outreach</h2>
+        <blockquote><%= acquisition.outcomeMessage %></blockquote>
+
+        <div class="sales-three-column">
+          <div>
+            <h3>Direct targets</h3>
+            <ul>
+              <% acquisition.directTargets.forEach(function (item) { %><li><%= item %></li><% }); %>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Referral partners</h3>
+            <ul>
+              <% acquisition.referralPartners.forEach(function (item) { %><li><%= item %></li><% }); %>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Weekly cadence</h3>
+            <ul>
+              <% acquisition.weeklyCadence.forEach(function (item) { %><li><%= item %></li><% }); %>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="sales-panel">
+        <p class="sales-eyebrow">Reading order</p>
+        <h2>Sales KB Articles</h2>
+        <div class="sales-kb-grid">
+          <% cards.forEach(function (card) { %>
+            <article class="sales-kb-card">
+              <span>Card <%= card.id %></span>
+              <h3><%= card.title %></h3>
+              <p><%= card.goal %></p>
+              <small>KB articles: <%= card.kbArticles.join(", ") %></small>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

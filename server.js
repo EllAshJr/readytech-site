@@ -5,6 +5,7 @@ const restaurantData = require("./data/restaurant");
 const pricingData = require("./data/pricing");
 const siteStrategy = require("./data/site-strategy");
 const quoteRouter = require("./routes/quotes");
+const salesRouter = require("./routes/sales");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -180,6 +181,8 @@ app.post("/contact", (req, res) => {
 });
 
 app.use(quoteRouter);
+
+app.use(salesRouter);
 
 app.get("/:city/:slug", (req, res) => {
   const city = restaurantData.cities[req.params.city];

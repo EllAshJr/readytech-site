@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body class="sales-app-body">
+    <% if (salesSession) { %><%- include("partials/nav") %><% } %>
+
+    <main class="sales-login-shell">
+      <section class="sales-login-card">
+        <p class="sales-eyebrow">ReadyTech Sales Coach</p>
+        <h1>We could not complete that action</h1>
+        <p><%= message %></p>
+        <% if (details) { %><pre class="sales-error-details"><%= details %></pre><% } %>
+        <a href="<%= salesSession ? '/sales' : '/sales/login' %>" class="sales-primary-button">Return</a>
+      </section>
+    </main>
+  </body>
+</html>
