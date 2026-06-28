@@ -1,6 +1,7 @@
 node_modules/
 .env
 .env.*
+!/.env.example
 *.log
 npm-debug.log*
 .DS_Store
@@ -9,9 +10,6 @@ npm-debug.log*
 *.bak
 *.bak-*
 *.backup
-node_modules/
-node_modules/
-!/.env.example
 
 # Local installer backups
 backups/
