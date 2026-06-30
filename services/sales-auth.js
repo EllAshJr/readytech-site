@@ -21,7 +21,13 @@ function parseCookies(header = "") {
     if (index === -1) continue;
     const key = pair.slice(0, index).trim();
     const value = pair.slice(index + 1).trim();
-    if (key) result[key] = decodeURIComponent(value);
+    if (!key) continue;
+
+    try {
+      result[key] = decodeURIComponent(value);
+    } catch {
+      continue;
+    }
   }
   return result;
 }
@@ -114,7 +120,7 @@ function clearSessionCookie(res) {
 }
 
 function sessionFromRequest(req) {
-  const cookies = parseCookies(req.headers.cookie);
+  const cookies = parseCookies(req && req.headers ? req.headers.cookie : "");
   return verifySessionToken(cookies[cookieName()]);
 }
 
@@ -126,6 +132,7 @@ function authenticate(username, password) {
 function attachSession(req, res, next) {
   const session = sessionFromRequest(req);
   req.salesSession = session;
+  if (!res.locals) res.locals = {};
   res.locals.salesSession = session;
   res.locals.salesCsrf = session ? session.csrf : "";
   next();
@@ -140,7 +147,10 @@ function requireSalesAuth(req, res, next) {
 }
 
 function requireCsrf(req, res, next) {
-  if (!req.salesSession || !safeEqual(req.body._csrf, req.salesSession.csrf)) {
+  const session = req ? req.salesSession : null;
+  const body = req && req.body && typeof req.body === "object" ? req.body : {};
+
+  if (!session || !safeEqual(body._csrf, session.csrf)) {
     return res.status(403).send("The sales session security token is invalid or expired.");
   }
   return next();

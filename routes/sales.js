@@ -75,10 +75,50 @@ function consultationNumber() {
   return `RT-S-${year}-${crypto.randomInt(100000, 1000000)}`;
 }
 
+function parsePositiveInteger(value) {
+  const candidate = String(value ?? "").trim();
+  if (!/^\d+$/.test(candidate)) return null;
+
+  const parsed = Number(candidate);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
+}
+
+function parseConsultationId(value) {
+  return parsePositiveInteger(value);
+}
+
+function parseWorkflowCardId(value) {
+  const cardId = parsePositiveInteger(value);
+  return cardId && cardById.has(cardId) ? cardId : null;
+}
+
+function renderBadSalesRequest(res, message) {
+  return res.status(400).render(
+    "sales/error",
+    baseViewData({
+      message,
+      details: "",
+    }),
+  );
+}
+
+function renderConsultationNotFound(res) {
+  return res.status(404).render(
+    "sales/error",
+    baseViewData({
+      message: "Consultation not found.",
+      details: "",
+    }),
+  );
+}
+
 async function getConsultation(id) {
+  const consultationId = parseConsultationId(id);
+  if (!consultationId) return null;
+
   const result = await query(
     `SELECT * FROM sales_consultations WHERE id = $1 LIMIT 1`,
-    [Number(id)],
+    [consultationId],
   );
   return result.rows[0] || null;
 }
@@ -114,6 +154,11 @@ async function createConsultation(session) {
 }
 
 async function updateConsultation(id, answers, currentCard, status = "in_progress", analysis = null) {
+  const consultationId = parseConsultationId(id);
+  if (!consultationId) throw new Error("Invalid sales consultation ID.");
+
+  const safeCurrentCard = parseWorkflowCardId(currentCard) || 1;
+
   const result = await query(
     `
       UPDATE sales_consultations
@@ -134,7 +179,7 @@ async function updateConsultation(id, answers, currentCard, status = "in_progres
       RETURNING *
     `,
     [
-      Number(id),
+      consultationId,
       answers.customer_name || "",
       answers.business_name || "",
       answers.customer_email || "",
@@ -142,7 +187,7 @@ async function updateConsultation(id, answers, currentCard, status = "in_progres
       answers.business_type || "",
       answers.city || "",
       status,
-      Number(currentCard) || 1,
+      safeCurrentCard,
       JSON.stringify(answers),
       analysis ? JSON.stringify(analysis) : null,
     ],
@@ -153,10 +198,10 @@ async function updateConsultation(id, answers, currentCard, status = "in_progres
 
 function visitedWith(currentVisited, currentCardId) {
   const visited = Array.isArray(currentVisited)
-    ? currentVisited.map(Number).filter(Number.isFinite)
+    ? currentVisited.map(parseWorkflowCardId).filter(Boolean)
     : [];
-  const current = Number(currentCardId);
-  if (!visited.includes(current)) visited.push(current);
+  const current = parseWorkflowCardId(currentCardId);
+  if (current && !visited.includes(current)) visited.push(current);
   return visited;
 }
 
@@ -190,17 +235,18 @@ router.get("/sales/login", (req, res) => {
 
 router.post("/sales/login", loginLimiter, (req, res) => {
   try {
-    const username = String(req.body.username || "").trim();
-    const password = String(req.body.password || "");
-    const name = String(req.body.salesperson_name || "").trim();
-    const email = String(req.body.salesperson_email || "").trim().toLowerCase();
+    const body = req.body || {};
+    const username = String(body.username || "").trim();
+    const password = String(body.password || "");
+    const name = String(body.salesperson_name || "").trim();
+    const email = String(body.salesperson_email || "").trim().toLowerCase();
 
     if (!name || !/^\S+@\S+\.\S+$/.test(email)) {
       return res.status(400).render(
         "sales/login",
         baseViewData({
           error: "Enter your name and a valid work email.",
-          returnTo: safeReturnTo(req.body.returnTo),
+          returnTo: safeReturnTo(body.returnTo),
           showDefaultHint: defaultHintAvailable(),
         }),
       );
@@ -211,7 +257,7 @@ router.post("/sales/login", loginLimiter, (req, res) => {
         "sales/login",
         baseViewData({
           error: "The username or password is incorrect.",
-          returnTo: safeReturnTo(req.body.returnTo),
+          returnTo: safeReturnTo(body.returnTo),
           showDefaultHint: defaultHintAvailable(),
         }),
       );
@@ -219,7 +265,7 @@ router.post("/sales/login", loginLimiter, (req, res) => {
 
     const token = createSessionToken({ name, email, username });
     setSessionCookie(res, token);
-    return res.redirect(safeReturnTo(req.body.returnTo));
+    return res.redirect(safeReturnTo(body.returnTo));
   } catch (error) {
     return handleRouteError(res, error, "The sales login could not be completed.");
   }
@@ -244,7 +290,10 @@ router.get("/sales", requireSalesAuth, async (req, res) => {
     return res.render(
       "sales/dashboard",
       baseViewData({
-        consultations: result.rows,
+        consultations: result.rows.map((consultation) => ({
+          ...consultation,
+          current_card: parseWorkflowCardId(consultation.current_card) || 1,
+        })),
       }),
     );
   } catch (error) {
@@ -279,12 +328,16 @@ router.get(
   requireSalesAuth,
   async (req, res) => {
     try {
-      const consultation = await getConsultation(req.params.id);
-      if (!consultation) return res.status(404).render("sales/error", baseViewData({ message: "Consultation not found.", details: "" }));
+      const consultationId = parseConsultationId(req.params.id);
+      if (!consultationId) return renderBadSalesRequest(res, "Invalid consultation ID.");
 
-      const cardId = Number(req.params.cardId);
+      const cardId = parseWorkflowCardId(req.params.cardId);
+      if (!cardId) return renderBadSalesRequest(res, "Invalid sales card.");
+
+      const consultation = await getConsultation(consultationId);
+      if (!consultation) return renderConsultationNotFound(res);
+
       const card = cardById.get(cardId);
-      if (!card) return res.redirect(`/sales/consultations/${consultation.id}/card/${consultation.current_card || 1}`);
 
       const answers = consultation.answers || {};
       const analysis = analyzeSalesConsultation(answers);
@@ -315,14 +368,19 @@ router.post(
   requireCsrf,
   async (req, res) => {
     try {
-      const consultation = await getConsultation(req.params.id);
+      const consultationId = parseConsultationId(req.params.id);
+      if (!consultationId) return res.status(400).send("Invalid consultation ID.");
+
+      const cardId = parseWorkflowCardId(req.params.cardId);
+      if (!cardId) return res.status(400).send("Invalid sales card.");
+
+      const consultation = await getConsultation(consultationId);
       if (!consultation) return res.status(404).send("Consultation not found.");
 
-      const cardId = Number(req.params.cardId);
       const card = cardById.get(cardId);
-      if (!card) return res.status(400).send("Unknown sales card.");
+      const body = req.body || {};
 
-      const cardAnswers = normalizeCardAnswers(cardId, req.body);
+      const cardAnswers = normalizeCardAnswers(cardId, body);
       const answers = {
         ...(consultation.answers || {}),
         ...cardAnswers,
@@ -332,7 +390,7 @@ router.post(
         cardId,
       );
 
-      const action = req.body.action || "next";
+      const action = body.action || "next";
 
       if (action === "save") {
         await updateConsultation(consultation.id, answers, cardId, "in_progress");
@@ -393,8 +451,11 @@ router.get(
   requireSalesAuth,
   async (req, res) => {
     try {
-      const consultation = await getConsultation(req.params.id);
-      if (!consultation) return res.status(404).render("sales/error", baseViewData({ message: "Consultation not found.", details: "" }));
+      const consultationId = parseConsultationId(req.params.id);
+      if (!consultationId) return renderBadSalesRequest(res, "Invalid consultation ID.");
+
+      const consultation = await getConsultation(consultationId);
+      if (!consultation) return renderConsultationNotFound(res);
       const analysis = consultation.analysis || analyzeSalesConsultation(consultation.answers || {});
 
       return res.render(
@@ -417,8 +478,11 @@ router.post(
   requireSalesAuth,
   requireCsrf,
   async (req, res) => {
+    const consultationId = parseConsultationId(req.params.id);
+    if (!consultationId) return res.status(400).send("Invalid consultation ID.");
+
     try {
-      const consultation = await getConsultation(req.params.id);
+      const consultation = await getConsultation(consultationId);
       if (!consultation) return res.status(404).send("Consultation not found.");
       const analysis = consultation.analysis || analyzeSalesConsultation(consultation.answers || {});
       const result = await sendSalesConsultationReport({
@@ -439,9 +503,35 @@ router.post(
       );
     } catch (error) {
       console.error(error);
-      return res.redirect(`/sales/consultations/${req.params.id}/results?email=failed`);
+      return res.redirect(`/sales/consultations/${consultationId}/results?email=failed`);
     }
   },
 );
+
+
+// Sales Coach fallback 404 route.
+// Keeps malformed /sales URLs on the styled Sales Coach error page.
+router.use("/sales", (req, res) => {
+  const errorData =
+    typeof baseViewData === "function"
+      ? baseViewData({
+          message: "Sales page not found.",
+          details:
+            "The requested Sales Coach page does not exist or the link is invalid.",
+        })
+      : {
+          pageTitle: "Sales page not found",
+          message: "Sales page not found.",
+          details:
+            "The requested Sales Coach page does not exist or the link is invalid.",
+        };
+
+  return res.status(404).render("sales/error", errorData);
+});
+
+router._testing = {
+  parseConsultationId,
+  parseWorkflowCardId,
+};
 
 module.exports = router;
