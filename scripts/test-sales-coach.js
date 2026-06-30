@@ -1,11 +1,104 @@
 "use strict";
 
+const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 const ejs = require("ejs");
+const salesRouter = require("../routes/sales");
+const { attachSession, requireCsrf } = require("../services/sales-auth");
 const { analyzeSalesConsultation, getWorkflowSequence } = require("../services/sales-recommendation-engine");
 
 const files = [];
+
+function mockResponse() {
+  return {
+    locals: {},
+    statusCode: null,
+    sentBody: null,
+    status(code) {
+      this.statusCode = code;
+      return this;
+    },
+    send(body) {
+      this.sentBody = body;
+      return this;
+    },
+  };
+}
+
+function assertRouteValidationHelpers() {
+  assert.ok(salesRouter._testing, "Expected Sales Coach route test helpers.");
+
+  const { parseConsultationId, parseWorkflowCardId } = salesRouter._testing;
+
+  assert.strictEqual(parseConsultationId("42"), 42);
+  assert.strictEqual(parseConsultationId(42), 42);
+  assert.strictEqual(parseConsultationId("abc"), null);
+  assert.strictEqual(parseConsultationId("1.5"), null);
+  assert.strictEqual(parseConsultationId("-1"), null);
+  assert.strictEqual(parseConsultationId("0"), null);
+  assert.strictEqual(parseConsultationId("9007199254740992"), null);
+
+  assert.strictEqual(parseWorkflowCardId("1"), 1);
+  assert.strictEqual(parseWorkflowCardId("12"), 12);
+  assert.strictEqual(parseWorkflowCardId("0"), null);
+  assert.strictEqual(parseWorkflowCardId("13"), null);
+  assert.strictEqual(parseWorkflowCardId("abc"), null);
+  assert.strictEqual(parseWorkflowCardId("1.5"), null);
+}
+
+function assertMalformedCookieSafety() {
+  const req = {
+    headers: {
+      cookie: "readytech_sales=%E0%A4%A; other=value",
+    },
+  };
+  const res = mockResponse();
+  let nextCalled = false;
+
+  assert.doesNotThrow(() => {
+    attachSession(req, res, () => {
+      nextCalled = true;
+    });
+  });
+
+  assert.strictEqual(nextCalled, true);
+  assert.strictEqual(req.salesSession, null);
+  assert.strictEqual(res.locals.salesSession, null);
+  assert.strictEqual(res.locals.salesCsrf, "");
+}
+
+function assertCsrfSafety() {
+  const missingBodyRes = mockResponse();
+  let missingBodyNextCalled = false;
+
+  assert.doesNotThrow(() => {
+    requireCsrf(
+      { salesSession: { csrf: "known-token" } },
+      missingBodyRes,
+      () => {
+        missingBodyNextCalled = true;
+      },
+    );
+  });
+
+  assert.strictEqual(missingBodyNextCalled, false);
+  assert.strictEqual(missingBodyRes.statusCode, 403);
+
+  const validRes = mockResponse();
+  let validNextCalled = false;
+
+  requireCsrf(
+    { salesSession: { csrf: "known-token" }, body: { _csrf: "known-token" } },
+    validRes,
+    () => {
+      validNextCalled = true;
+    },
+  );
+
+  assert.strictEqual(validNextCalled, true);
+  assert.strictEqual(validRes.statusCode, null);
+}
 
 function walk(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -21,6 +114,15 @@ for (const file of files) {
   ejs.compile(fs.readFileSync(file, "utf8"), { filename: file });
   console.log(`OK EJS: ${path.relative(process.cwd(), file)}`);
 }
+
+assertRouteValidationHelpers();
+console.log("OK route validation: bad IDs and card numbers rejected");
+
+assertMalformedCookieSafety();
+console.log("OK auth safety: malformed cookies do not throw");
+
+assertCsrfSafety();
+console.log("OK CSRF safety: missing body fails closed");
 
 const sample = {
   business_type: "restaurant",
