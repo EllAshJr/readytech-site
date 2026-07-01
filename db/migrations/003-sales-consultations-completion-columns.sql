@@ -1,0 +1,5 @@
+ALTER TABLE sales_consultations
+  ADD COLUMN IF NOT EXISTS analysis JSONB,
+  ADD COLUMN IF NOT EXISTS report_email_id VARCHAR(160),
+  ADD COLUMN IF NOT EXISTS report_emailed_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS completed_at TIMESTAMPTZ;
