@@ -16,7 +16,7 @@ It should:
 - recommend the right offer
 - explain why
 - tell the salesperson the next step
-- email the completed report to the salesperson
+- email the completed report to the salesperson and owner with an HTML report attachment
 
 ## Temporary Login
 
