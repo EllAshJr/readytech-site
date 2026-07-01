@@ -6,6 +6,7 @@ const path = require("path");
 const ejs = require("ejs");
 const salesRouter = require("../routes/sales");
 const { attachSession, requireCsrf } = require("../services/sales-auth");
+const { _testing: salesEmailTesting } = require("../services/sales-email-service");
 const { analyzeSalesConsultation, getWorkflowSequence } = require("../services/sales-recommendation-engine");
 
 const files = [];
@@ -100,6 +101,82 @@ function assertCsrfSafety() {
   assert.strictEqual(validRes.statusCode, null);
 }
 
+function assertSalesReportEmailHelpers(analysis, answers) {
+  const consultation = {
+    id: 123,
+    consultation_number: "RT-S-2026-123456",
+    salesperson_name: "ReadyTech Seller",
+    salesperson_email: "seller@example.com",
+    customer_name: "A&B <Owner>",
+    business_name: "Ready <Diner>",
+    customer_email: "customer@example.com",
+    customer_phone: "555-0100",
+    business_type: "restaurant",
+    city: "Manor",
+    completed_at: "2026-06-30T15:45:00.000Z",
+    updated_at: "2026-06-30T15:45:00.000Z",
+    answers: {
+      ...answers,
+      problem_description: "Internet <script>alert(1)</script> & POS down",
+    },
+  };
+
+  const recipients = salesEmailTesting.buildSalesReportRecipients({
+    recipient: "seller@example.com",
+    env: {
+      NODE_ENV: "development",
+      SALES_OWNER_COPY_EMAIL: "owner@example.com, second@example.com, SELLER@example.com",
+    },
+    logger: { warn() {} },
+  });
+
+  assert.deepStrictEqual(recipients.to, [
+    "seller@example.com",
+    "owner@example.com",
+    "second@example.com",
+  ]);
+
+  assert.deepStrictEqual(
+    salesEmailTesting.getOwnerReportRecipients({
+      OWNER_EMAIL: "fallback-owner@example.com",
+    }),
+    ["fallback-owner@example.com"],
+  );
+
+  const missingOwner = salesEmailTesting.buildSalesReportRecipients({
+    recipient: "seller@example.com",
+    env: { NODE_ENV: "development" },
+    logger: { warn() {} },
+  });
+  assert.strictEqual(missingOwner.ownerCopyMissing, true);
+  assert.deepStrictEqual(missingOwner.to, ["seller@example.com"]);
+
+  assert.throws(
+    () => salesEmailTesting.buildSalesReportRecipients({
+      recipient: "seller@example.com",
+      env: { NODE_ENV: "production" },
+      logger: { warn() {} },
+    }),
+    /SALES_OWNER_COPY_EMAIL or OWNER_EMAIL/,
+  );
+
+  const attachment = salesEmailTesting.buildSalesReportAttachment({
+    consultation,
+    analysis,
+  });
+  const attachmentHtml = Buffer.from(attachment.content, "base64").toString("utf8");
+
+  assert.ok(attachment.filename.includes(consultation.consultation_number));
+  assert.ok(attachment.filename.endsWith(".html"));
+  assert.ok(attachmentHtml.includes(consultation.consultation_number));
+  assert.ok(attachmentHtml.includes("seller@example.com"));
+  assert.ok(attachmentHtml.includes("A&amp;B &lt;Owner&gt;"));
+  assert.ok(attachmentHtml.includes("Ready &lt;Diner&gt;"));
+  assert.ok(attachmentHtml.includes("Internet &lt;script&gt;alert(1)&lt;/script&gt; &amp; POS down"));
+  assert.ok(!attachmentHtml.includes("A&B <Owner>"));
+  assert.ok(!attachmentHtml.includes("<script>alert(1)</script>"));
+}
+
 function walk(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     const fullPath = path.join(directory, entry.name);
@@ -174,6 +251,9 @@ if (result.entryOffer.id !== "assessment") {
 if (!sequence.includes(7) || !sequence.includes(8)) {
   throw new Error("Expected ReadyUptime and ReadyOps cards in restaurant workflow.");
 }
+
+assertSalesReportEmailHelpers(result, sample);
+console.log("OK sales report email: recipients and HTML attachment");
 
 console.log("OK recommendation engine: ReadyContinuity Pro");
 console.log("OK entry offer: Uptime Assessment");
