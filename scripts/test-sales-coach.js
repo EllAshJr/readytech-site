@@ -6,6 +6,7 @@ const path = require("path");
 const ejs = require("ejs");
 const salesRouter = require("../routes/sales");
 const { attachSession, requireCsrf } = require("../services/sales-auth");
+const { _testing: salesAccountTesting } = require("../services/sales-account-service");
 const { _testing: salesEmailTesting } = require("../services/sales-email-service");
 const { analyzeSalesConsultation, getWorkflowSequence } = require("../services/sales-recommendation-engine");
 
@@ -99,6 +100,42 @@ function assertCsrfSafety() {
 
   assert.strictEqual(validNextCalled, true);
   assert.strictEqual(validRes.statusCode, null);
+}
+
+function assertSalesAccountHelpers() {
+  assert.strictEqual(salesAccountTesting.normalizeUsername(" Ready.Seller_1 "), "ready.seller_1");
+  assert.strictEqual(salesAccountTesting.normalizeEmail(" SELLER@EXAMPLE.COM "), "seller@example.com");
+
+  assert.strictEqual(salesAccountTesting.validateUsername("ready-seller").ok, true);
+  assert.strictEqual(salesAccountTesting.validateUsername("no spaces").ok, false);
+  assert.strictEqual(salesAccountTesting.validateUsername("ab").ok, false);
+
+  assert.strictEqual(salesAccountTesting.validatePassword("short1").ok, false);
+  assert.strictEqual(salesAccountTesting.validatePassword("longpassword").ok, false);
+  assert.strictEqual(salesAccountTesting.validatePassword("ReadyTech2026").ok, true);
+
+  const token = salesAccountTesting.generateToken();
+  const secondToken = salesAccountTesting.generateToken();
+  assert.notStrictEqual(token, secondToken);
+  assert.ok(token.length >= 32);
+
+  const tokenHash = salesAccountTesting.tokenHash(token);
+  assert.notStrictEqual(tokenHash, token);
+  assert.strictEqual(tokenHash, salesAccountTesting.tokenHash(token));
+
+  assert.strictEqual(
+    salesAccountTesting.signupUrl("abc123", { BASE_URL: "https://readytech.example/" }),
+    "https://readytech.example/sales/signup/abc123",
+  );
+  assert.strictEqual(
+    salesAccountTesting.resetUrl("abc123", { BASE_URL: "https://readytech.example/" }),
+    "https://readytech.example/sales/reset/abc123",
+  );
+
+  const hash = salesAccountTesting.hashPassword("ReadyTech2026");
+  assert.notStrictEqual(hash, "ReadyTech2026");
+  assert.strictEqual(salesAccountTesting.verifyPassword("ReadyTech2026", hash), true);
+  assert.strictEqual(salesAccountTesting.verifyPassword("wrong-password", hash), false);
 }
 
 function assertSalesReportEmailHelpers(analysis, answers) {
@@ -200,6 +237,9 @@ console.log("OK auth safety: malformed cookies do not throw");
 
 assertCsrfSafety();
 console.log("OK CSRF safety: missing body fails closed");
+
+assertSalesAccountHelpers();
+console.log("OK sales accounts: validation, one-time token helpers, and password hashing");
 
 const sample = {
   business_type: "restaurant",

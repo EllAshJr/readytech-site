@@ -32,7 +32,7 @@
 }
 
 .sales-login-shell {
-  width: min(560px, 92vw);
+  width: min(920px, 92vw);
   margin: 40px auto;
 }
 
@@ -48,6 +48,62 @@
 
 .sales-login-card {
   padding: clamp(24px, 5vw, 42px);
+}
+
+.sales-login-section {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--sales-border);
+}
+
+.sales-login-section h2 {
+  margin: 0 0 14px;
+  color: #fff;
+  font-size: 1.15rem;
+}
+
+.sales-login-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.sales-login-details {
+  padding: 14px;
+  border: 1px solid var(--sales-border);
+  border-radius: 9px;
+  background: #090d12;
+}
+
+.sales-login-details summary {
+  color: var(--sales-accent-light);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.sales-invite-summary {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid var(--sales-border);
+  border-radius: 9px;
+  background: #090d12;
+}
+
+.sales-invite-summary span,
+.sales-invite-summary small {
+  color: var(--sales-muted);
+}
+
+.sales-invite-summary strong {
+  color: #fff;
+}
+
+.sales-password-reset-form {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px dashed var(--sales-border);
 }
 
 .sales-login-card h1,
@@ -696,6 +752,7 @@ fieldset.sales-question {
 
   .sales-stat-grid,
   .sales-score-grid,
+  .sales-login-grid,
   .sales-recommendation-grid,
   .sales-two-column,
   .sales-reference-grid,

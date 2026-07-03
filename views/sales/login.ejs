@@ -5,6 +5,7 @@
   <body class="sales-login-body">
     <main class="sales-login-shell">
       <section class="sales-login-card">
+        <% const formValues = values || {}; %>
         <p class="sales-eyebrow">Internal sales application</p>
         <h1>ReadyTech Sales Coach</h1>
         <p>
@@ -16,28 +17,57 @@
           <div class="sales-alert sales-alert-error"><%= error %></div>
         <% } %>
 
-        <form action="/sales/login" method="POST" class="sales-form">
+        <% if (notice) { %>
+          <div class="sales-alert sales-alert-success"><%= notice %></div>
+        <% } %>
+
+        <form action="/sales/login" method="POST" class="sales-form sales-login-section">
           <input type="hidden" name="returnTo" value="<%= returnTo %>" />
 
-          <label>
-            Your name
-            <input type="text" name="salesperson_name" required autocomplete="name" />
-          </label>
-
-          <label>
-            Your work email
-            <input type="email" name="salesperson_email" required autocomplete="email" />
-          </label>
+          <h2>Log in</h2>
 
           <label>
             Username
-            <input type="text" name="username" required autocomplete="username" />
+            <input
+              type="text"
+              name="username"
+              required
+              autocomplete="username"
+              value="<%= formValues.username || "" %>"
+            />
           </label>
 
           <label>
             Password
             <input type="password" name="password" required autocomplete="current-password" />
           </label>
+
+          <details class="sales-login-details">
+            <summary>Temporary shared-login details</summary>
+            <p class="sales-security-note">
+              Individual accounts do not need these fields. Use them only with the temporary shared login.
+            </p>
+
+            <label>
+              Your name
+              <input
+                type="text"
+                name="salesperson_name"
+                autocomplete="name"
+                value="<%= formValues.salesperson_name || "" %>"
+              />
+            </label>
+
+            <label>
+              Your work email
+              <input
+                type="email"
+                name="salesperson_email"
+                autocomplete="email"
+                value="<%= formValues.salesperson_email || "" %>"
+              />
+            </label>
+          </details>
 
           <button type="submit" class="sales-primary-button">Log in</button>
         </form>
@@ -49,9 +79,115 @@
           </div>
         <% } %>
 
+        <div class="sales-login-grid">
+          <section class="sales-login-section" id="create-account">
+            <h2>Create account</h2>
+            <% if (signupInvite && signupToken) { %>
+              <div class="sales-invite-summary">
+                <span>Invite for</span>
+                <strong><%= signupInvite.salesperson_name %></strong>
+                <small><%= signupInvite.email %></small>
+              </div>
+
+              <form action="/sales/signup" method="POST" class="sales-form">
+                <input type="hidden" name="returnTo" value="<%= returnTo %>" />
+                <input type="hidden" name="invite_token" value="<%= signupToken %>" />
+
+                <label>
+                  Choose a username
+                  <input
+                    type="text"
+                    name="username"
+                    required
+                    autocomplete="username"
+                    value="<%= formValues.signup_username || "" %>"
+                  />
+                </label>
+
+                <label>
+                  Create a password
+                  <input type="password" name="password" required autocomplete="new-password" />
+                </label>
+
+                <label>
+                  Confirm password
+                  <input type="password" name="confirm_password" required autocomplete="new-password" />
+                </label>
+
+                <button type="submit" class="sales-secondary-button">Create account</button>
+              </form>
+            <% } else { %>
+              <p class="sales-security-note">
+                Ask the ReadyTech owner for your personal account invite link.
+                Invite links work once and are tied to your email.
+              </p>
+            <% } %>
+          </section>
+
+          <section class="sales-login-section" id="forgot-account">
+            <h2>Forgot username or password</h2>
+
+            <form action="/sales/forgot-username" method="POST" class="sales-form">
+              <label>
+                Work email
+                <input
+                  type="email"
+                  name="salesperson_email"
+                  required
+                  autocomplete="email"
+                  value="<%= formValues.forgot_email || "" %>"
+                />
+              </label>
+
+              <button type="submit" class="sales-secondary-button">Show username</button>
+            </form>
+
+            <form action="/sales/forgot-password" method="POST" class="sales-form sales-password-reset-form">
+              <label>
+                Work email
+                <input
+                  type="email"
+                  name="salesperson_email"
+                  required
+                  autocomplete="email"
+                  value="<%= formValues.reset_email || "" %>"
+                />
+              </label>
+
+              <button type="submit" class="sales-secondary-button">Send reset link</button>
+            </form>
+          </section>
+        </div>
+
+        <% if (resetToken && resetAccount) { %>
+          <section class="sales-login-section" id="reset-password">
+            <h2>Reset password</h2>
+            <div class="sales-invite-summary">
+              <span>Reset for</span>
+              <strong><%= resetAccount.salesperson_name %></strong>
+              <small><%= resetAccount.email %></small>
+            </div>
+
+            <form action="/sales/reset-password" method="POST" class="sales-form">
+              <input type="hidden" name="reset_token" value="<%= resetToken %>" />
+
+              <label>
+                New password
+                <input type="password" name="password" required autocomplete="new-password" />
+              </label>
+
+              <label>
+                Confirm new password
+                <input type="password" name="confirm_password" required autocomplete="new-password" />
+              </label>
+
+              <button type="submit" class="sales-secondary-button">Update password</button>
+            </form>
+          </section>
+        <% } %>
+
         <p class="sales-security-note">
-          The shared login is temporary. Use Render environment variables and
-          replace it with individual accounts before scaling the sales team.
+          Account invite and password reset links are private, one-time links tied to a specific email.
         </p>
       </section>
     </main>
