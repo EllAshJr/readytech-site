@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <p class="eyebrow">Urgent business support</p>
+          <h1><%= siteStrategy.urgentSupport.headline %></h1>
+          <p><%= siteStrategy.urgentSupport.description %></p>
+
+          <div class="hero-actions">
+            <a href="/contact?service=urgent-support" class="button" data-track-lead="urgent-contact">
+              Request Urgent Help
+            </a>
+            <a href="/instant-quote" class="button secondary" data-track-lead="urgent-estimate">
+              Start an Estimate
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="container section">
+        <h2>Use this path for</h2>
+        <div class="grid">
+          <% siteStrategy.urgentSupport.situations.forEach(function(item) { %>
+            <article class="card compact-card">
+              <h3><%= item %></h3>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section">
+        <article class="card featured-panel">
+          <p class="eyebrow">How ReadyTech handles urgent requests</p>
+          <h2>Triage first, then stabilize the right thing.</h2>
+          <p><%= siteStrategy.urgentSupport.responseNote %></p>
+          <p>
+            Include your business name, city, best callback number, what is down,
+            and whether payments, orders, or staff access are affected.
+          </p>
+          <a href="/contact?service=urgent-support" class="button" data-track-lead="urgent-details">
+            Send Urgent Request
+          </a>
+        </article>
+      </section>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main class="container section">
+      <p class="eyebrow">Example jobs</p>
+      <h1>Common ReadyTech projects and outcomes</h1>
+      <p class="lead">
+        These examples show the types of business uptime, connectivity, and
+        restaurant-operations problems ReadyTech is built to solve.
+      </p>
+
+      <div class="grid case-study-grid">
+        <% siteStrategy.exampleJobs.forEach(function(job) { %>
+          <article class="card">
+            <p class="eyebrow"><%= job.business %></p>
+            <h2><%= job.title %></h2>
+            <p><strong>Problem:</strong> <%= job.problem %></p>
+            <p><strong>ReadyTech approach:</strong> <%= job.solution %></p>
+            <p><strong>Outcome:</strong> <%= job.result %></p>
+          </article>
+        <% }); %>
+      </div>
+
+      <section class="section">
+        <article class="card featured-panel">
+          <h2>Have a similar issue?</h2>
+          <p>
+            The safest next step is a Business Uptime Assessment or an urgent
+            support request if the issue is affecting operations right now.
+          </p>
+          <div class="hero-actions">
+            <a href="/contact?service=uptime-assessment" class="button" data-track-lead="examples-assessment">
+              Book Assessment
+            </a>
+            <a href="/urgent-support" class="button secondary" data-track-lead="examples-urgent">
+              Urgent Support
+            </a>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>
