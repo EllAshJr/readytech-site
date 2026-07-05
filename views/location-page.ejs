@@ -24,6 +24,25 @@
           <% }) %>
         </div>
       </section>
+
+      <% if (localSeoPages && localSeoPages.length) { %>
+        <section class="section">
+          <p class="eyebrow">Focused local services</p>
+          <h2>Popular ReadyTech help in <%= location.city %></h2>
+
+          <div class="grid">
+            <% localSeoPages.forEach(function(localPage) { %>
+              <article class="card compact-card">
+                <h3><%= localPage.title %></h3>
+                <p><%= localPage.description %></p>
+                <a href="/locations/<%= localPage.city %>/<%= localPage.slug %>">
+                  View local service
+                </a>
+              </article>
+            <% }); %>
+          </div>
+        </section>
+      <% } %>
     </main>
 
     <%- include("partials/footer") %>

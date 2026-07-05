@@ -269,9 +269,43 @@ async function sendCallRequestEmails({ quote }) {
   }
 }
 
+async function sendContactRequestEmail({ submission }) {
+  const ownerEmail = process.env.OWNER_EMAIL;
+
+  if (!ownerEmail && process.env.NODE_ENV === "production") {
+    throw new Error("OWNER_EMAIL is not configured.");
+  }
+
+  const subject = `ReadyTech contact request: ${submission.service || "General request"}`;
+  const body = `
+    <p>A new ReadyTech contact request was submitted from the website.</p>
+    <p><strong>Name:</strong> ${escapeHtml(submission.name)}<br>
+       <strong>Email:</strong> ${escapeHtml(submission.email)}<br>
+       <strong>Phone:</strong> ${escapeHtml(submission.phone || "Not provided")}<br>
+       <strong>City:</strong> ${escapeHtml(submission.city || "Not provided")}<br>
+       <strong>Service interest:</strong> ${escapeHtml(submission.service || "Not provided")}</p>
+    <h3>Message</h3>
+    <p>${escapeHtml(submission.message).replace(/\n/g, "<br>")}</p>
+  `;
+
+  if (!ownerEmail) {
+    console.log(`[DEV CONTACT EMAIL] ${subject} -> OWNER_EMAIL not set`);
+    console.log(JSON.stringify(submission, null, 2));
+    return { skipped: true, id: null };
+  }
+
+  return sendEmail({
+    to: ownerEmail,
+    subject,
+    html: emailShell("New ReadyTech contact request", body),
+    replyTo: submission.email || process.env.QUOTE_REPLY_TO,
+  });
+}
+
 module.exports = {
   sendInitialEstimateEmails,
   sendDecisionEmails,
   sendCallRequestEmails,
+  sendContactRequestEmail,
   decisionUrl,
 };

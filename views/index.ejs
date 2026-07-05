@@ -24,6 +24,14 @@
         </div>
       </section>
 
+      <% if (typeof contactNotice === "string" && contactNotice) { %>
+        <section class="container">
+          <div class="site-notice" role="status">
+            <%= contactNotice %>
+          </div>
+        </section>
+      <% } %>
+
       <section class="container section">
         <p class="eyebrow">Three service pillars</p>
         <h2>One operating model for business-critical connectivity</h2>
@@ -73,6 +81,41 @@
         </div>
       </section>
 
+      <section class="container section trust-section">
+        <p class="eyebrow">Why local businesses trust ReadyTech</p>
+        <h2>Practical work, documented clearly, built for uptime.</h2>
+
+        <div class="grid">
+          <% siteStrategy.trustSignals.forEach(function (signal) { %>
+            <article class="card compact-card">
+              <h3><%= signal.title %></h3>
+              <p><%= signal.description %></p>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section">
+        <p class="eyebrow">Example jobs</p>
+        <h2>Common problems ReadyTech helps solve</h2>
+
+        <div class="grid case-study-grid">
+          <% siteStrategy.exampleJobs.forEach(function (job) { %>
+            <article class="card compact-card">
+              <p class="eyebrow"><%= job.business %></p>
+              <h3><%= job.title %></h3>
+              <p><%= job.problem %></p>
+            </article>
+          <% }); %>
+        </div>
+
+        <div class="hero-actions">
+          <a href="/case-studies" class="button secondary" data-track-lead="home-examples">
+            View Example Jobs
+          </a>
+        </div>
+      </section>
+
       <section class="container section">
         <article class="card featured-panel">
           <p class="eyebrow">Restaurant specialization</p>
@@ -98,6 +141,20 @@
               <p><strong><%= area.type %></strong></p>
               <p><%= area.description %></p>
             </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section faq-section">
+        <p class="eyebrow">FAQ</p>
+        <h2>Quick answers before you book</h2>
+
+        <div class="faq-list">
+          <% siteStrategy.faqs.forEach(function (faq) { %>
+            <details class="faq-item">
+              <summary><%= faq.question %></summary>
+              <p><%= faq.answer %></p>
+            </details>
           <% }); %>
         </div>
       </section>

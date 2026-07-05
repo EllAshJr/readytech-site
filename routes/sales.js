@@ -23,6 +23,19 @@ const {
   clearSessionCookie,
   defaultHintAvailable,
 } = require("../services/sales-auth");
+const {
+  createSalesAccount,
+  authenticateSalesAccount,
+  getSignupInvite,
+  findAccountByEmail,
+  createPasswordReset,
+  getPasswordReset,
+  resetSalesAccountPassword,
+} = require("../services/sales-account-service");
+const {
+  sendUsernameReminderEmail,
+  sendPasswordResetEmail,
+} = require("../services/sales-account-email-service");
 const { sendSalesConsultationReport } = require("../services/sales-email-service");
 
 const router = express.Router();
@@ -61,6 +74,22 @@ function baseViewData(extra = {}) {
     quickReference,
     ...extra,
   };
+}
+
+function loginViewData(extra = {}) {
+  return baseViewData({
+    error: "",
+    notice: "",
+    activePanel: "login",
+    returnTo: "/sales",
+    values: {},
+    signupInvite: null,
+    signupToken: "",
+    resetToken: "",
+    resetAccount: null,
+    showDefaultHint: defaultHintAvailable(),
+    ...extra,
+  });
 }
 
 function safeReturnTo(value) {
@@ -225,29 +254,65 @@ router.get("/sales/login", (req, res) => {
   if (req.salesSession) return res.redirect("/sales");
   return res.render(
     "sales/login",
-    baseViewData({
-      error: "",
+    loginViewData({
       returnTo: safeReturnTo(req.query.returnTo),
-      showDefaultHint: defaultHintAvailable(),
     }),
   );
 });
 
-router.post("/sales/login", loginLimiter, (req, res) => {
+router.get("/sales/signup/:token", async (req, res) => {
+  if (req.salesSession) return res.redirect("/sales");
+
+  try {
+    const result = await getSignupInvite(req.params.token);
+    if (!result.ok) {
+      return res.status(result.setupError ? 503 : 400).render(
+        "sales/login",
+        loginViewData({
+          error: result.message,
+          activePanel: "signup",
+          returnTo: safeReturnTo(req.query.returnTo),
+        }),
+      );
+    }
+
+    return res.render(
+      "sales/login",
+      loginViewData({
+        activePanel: "signup",
+        returnTo: safeReturnTo(req.query.returnTo),
+        signupInvite: result.invite,
+        signupToken: req.params.token,
+      }),
+    );
+  } catch (error) {
+    return handleRouteError(res, error, "The sales account invite could not be loaded.");
+  }
+});
+
+router.post("/sales/login", loginLimiter, async (req, res) => {
   try {
     const body = req.body || {};
     const username = String(body.username || "").trim();
     const password = String(body.password || "");
+
+    const account = await authenticateSalesAccount(username, password);
+    if (account) {
+      const token = createSessionToken(account);
+      setSessionCookie(res, token);
+      return res.redirect(safeReturnTo(body.returnTo));
+    }
+
     const name = String(body.salesperson_name || "").trim();
     const email = String(body.salesperson_email || "").trim().toLowerCase();
 
     if (!name || !/^\S+@\S+\.\S+$/.test(email)) {
       return res.status(400).render(
         "sales/login",
-        baseViewData({
-          error: "Enter your name and a valid work email.",
+        loginViewData({
+          error: "Enter your name and a valid work email when using the temporary shared login.",
           returnTo: safeReturnTo(body.returnTo),
-          showDefaultHint: defaultHintAvailable(),
+          values: { username, salesperson_name: name, salesperson_email: email },
         }),
       );
     }
@@ -255,10 +320,10 @@ router.post("/sales/login", loginLimiter, (req, res) => {
     if (!authenticate(username, password)) {
       return res.status(401).render(
         "sales/login",
-        baseViewData({
+        loginViewData({
           error: "The username or password is incorrect.",
           returnTo: safeReturnTo(body.returnTo),
-          showDefaultHint: defaultHintAvailable(),
+          values: { username, salesperson_name: name, salesperson_email: email },
         }),
       );
     }
@@ -268,6 +333,181 @@ router.post("/sales/login", loginLimiter, (req, res) => {
     return res.redirect(safeReturnTo(body.returnTo));
   } catch (error) {
     return handleRouteError(res, error, "The sales login could not be completed.");
+  }
+});
+
+router.post("/sales/signup", loginLimiter, async (req, res) => {
+  const body = req.body || {};
+
+  try {
+    const result = await createSalesAccount({
+      username: body.username,
+      password: body.password,
+      confirmPassword: body.confirm_password,
+      inviteToken: body.invite_token,
+    });
+
+    if (!result.ok) {
+      const inviteResult = body.invite_token ? await getSignupInvite(body.invite_token) : null;
+      return res.status(result.setupError ? 503 : 400).render(
+        "sales/login",
+        loginViewData({
+          error: result.message,
+          activePanel: "signup",
+          returnTo: safeReturnTo(body.returnTo),
+          signupInvite: inviteResult && inviteResult.ok ? inviteResult.invite : null,
+          signupToken: body.invite_token || "",
+          values: {
+            signup_username: body.username,
+          },
+        }),
+      );
+    }
+
+    const token = createSessionToken({
+      name: result.account.salesperson_name,
+      email: result.account.email,
+      username: result.account.username,
+    });
+    setSessionCookie(res, token);
+    return res.redirect(safeReturnTo(body.returnTo));
+  } catch (error) {
+    return handleRouteError(res, error, "The sales account could not be created.");
+  }
+});
+
+router.post("/sales/forgot-username", loginLimiter, async (req, res) => {
+  const body = req.body || {};
+
+  try {
+    const result = await findAccountByEmail(body.salesperson_email);
+
+    if (!result.ok) {
+      return res.status(result.setupError ? 503 : 400).render(
+        "sales/login",
+        loginViewData({
+          error: result.message,
+          activePanel: "forgot",
+          values: { forgot_email: body.salesperson_email },
+        }),
+      );
+    }
+
+    if (result.account) {
+      await sendUsernameReminderEmail({ account: result.account });
+    }
+
+    return res.render(
+      "sales/login",
+      loginViewData({
+        notice: "If that email matches an active Sales Coach account, I sent the username.",
+        activePanel: "forgot",
+        values: { forgot_email: body.salesperson_email },
+      }),
+    );
+  } catch (error) {
+    return handleRouteError(res, error, "The username lookup could not be completed.");
+  }
+});
+
+router.post("/sales/forgot-password", loginLimiter, async (req, res) => {
+  const body = req.body || {};
+
+  try {
+    const result = await createPasswordReset({ email: body.salesperson_email });
+
+    if (!result.ok) {
+      return res.status(result.setupError ? 503 : 400).render(
+        "sales/login",
+        loginViewData({
+          error: result.message,
+          activePanel: "forgot",
+          values: { reset_email: body.salesperson_email },
+        }),
+      );
+    }
+
+    if (result.account) {
+      await sendPasswordResetEmail({
+        account: result.account,
+        resetUrl: result.resetUrl,
+      });
+    }
+
+    return res.render(
+      "sales/login",
+      loginViewData({
+        notice: "If that email matches an active Sales Coach account, I sent a password reset link.",
+        activePanel: "forgot",
+        values: { reset_email: body.salesperson_email },
+      }),
+    );
+  } catch (error) {
+    return handleRouteError(res, error, "The password reset email could not be sent.");
+  }
+});
+
+router.get("/sales/reset/:token", async (req, res) => {
+  if (req.salesSession) return res.redirect("/sales");
+
+  try {
+    const result = await getPasswordReset(req.params.token);
+    if (!result.ok) {
+      return res.status(result.setupError ? 503 : 400).render(
+        "sales/login",
+        loginViewData({
+          error: result.message,
+          activePanel: "reset",
+        }),
+      );
+    }
+
+    return res.render(
+      "sales/login",
+      loginViewData({
+        activePanel: "reset",
+        resetToken: req.params.token,
+        resetAccount: result.reset,
+      }),
+    );
+  } catch (error) {
+    return handleRouteError(res, error, "The password reset link could not be loaded.");
+  }
+});
+
+router.post("/sales/reset-password", loginLimiter, async (req, res) => {
+  const body = req.body || {};
+
+  try {
+    const result = await resetSalesAccountPassword({
+      resetToken: body.reset_token,
+      password: body.password,
+      confirmPassword: body.confirm_password,
+    });
+
+    if (!result.ok) {
+      const resetResult = body.reset_token ? await getPasswordReset(body.reset_token) : null;
+      return res.status(result.setupError ? 503 : 400).render(
+        "sales/login",
+        loginViewData({
+          error: result.message,
+          activePanel: "reset",
+          resetToken: body.reset_token || "",
+          resetAccount: resetResult && resetResult.ok ? resetResult.reset : null,
+        }),
+      );
+    }
+
+    return res.render(
+      "sales/login",
+      loginViewData({
+        notice: "Password updated. Log in with your new password.",
+        activePanel: "login",
+        values: { username: result.account.username },
+      }),
+    );
+  } catch (error) {
+    return handleRouteError(res, error, "The password reset could not be completed.");
   }
 });
 

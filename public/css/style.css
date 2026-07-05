@@ -1917,3 +1917,97 @@ a:hover {
   background: rgba(229, 131, 54, 0.1) !important;
   box-shadow: 0 0 14px rgba(229, 131, 54, 0.22) !important;
 }
+
+/* Public conversion additions */
+.conversion-cta {
+  margin-top: 60px;
+  padding: 44px 0;
+  background: #05070a;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.conversion-cta-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+  gap: 28px;
+  align-items: center;
+}
+
+.conversion-cta h2 {
+  margin: 0 0 12px;
+}
+
+.conversion-cta p {
+  max-width: 720px;
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.conversion-cta-actions {
+  display: grid;
+  gap: 12px;
+}
+
+.conversion-cta-actions .button {
+  width: 100%;
+  text-align: center;
+}
+
+.compact-card {
+  min-height: 100%;
+}
+
+.compact-card .eyebrow {
+  margin-top: 0;
+}
+
+.case-study-grid .card {
+  min-height: 100%;
+}
+
+.faq-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.faq-item {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.faq-item summary {
+  cursor: pointer;
+  color: white;
+  font-weight: 800;
+}
+
+.faq-item p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.site-notice {
+  margin: 24px 0 0;
+  padding: 18px 20px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.42);
+  border-radius: 12px;
+  color: #e5f7ff;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .conversion-cta-inner {
+    grid-template-columns: 1fr;
+  }
+}

@@ -335,34 +335,3 @@
     <%- include("partials/footer") %>
   </body>
 </html>
-EOF
-
-  node - <<'NODE'
-const fs = require("fs");
-const ejs = require("ejs");
-
-const file = "views/restaurant-technology.ejs";
-
-try {
-  const template = fs.readFileSync(file, "utf8");
-
-  ejs.compile(template, {
-    filename: file,
-  });
-
-  console.log("EJS syntax passed:", file);
-} catch (error) {
-  console.error("EJS syntax failed:", file);
-  console.error(error.message);
-  process.exit(1);
-}
-NODE
-
-  grep -n \
-    "ReadyOps for Restaurants\|Restaurant Operations Add-on\|Book a Business Uptime Assessment" \
-    views/restaurant-technology.ejs
-
-  echo
-  echo "STEP 10 COMPLETE"
-  echo "Backup saved in: backups/strategy-$STAMP"
-)

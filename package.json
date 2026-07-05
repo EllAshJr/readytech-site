@@ -4,14 +4,15 @@
   "description": "ReadyTech website for secure networking, managed VPN, private cloud, backup internet, monitoring, and restaurant technology services.",
   "main": "server.js",
   "scripts": {
-    "test": "npm run check",
-    "check": "npm run check:syntax && npm run sales:test",
-    "check:syntax": "node -c server.js && node -c routes/quotes.js && node -c routes/sales.js && node -c services/estimate-engine.js && node -c services/sales-recommendation-engine.js && node -c services/email-service.js && node -c services/sales-auth.js && node -c services/sales-email-service.js && node -c services/turnstile-service.js && node -c public/js/main.js && node -c public/js/quote-intake.js && node -c public/js/sales-coach.js && node -c scripts/run-migration.js && node -c scripts/test-sales-coach.js",
-    "start": "node server.js",
-    "dev": "node server.js",
-    "db:migrate": "node scripts/run-migration.js",
-    "sales:test": "node scripts/test-sales-coach.js"
-  },
+  "test": "npm run check",
+  "check": "npm run check:syntax && npm run sales:test",
+  "check:syntax": "node -c server.js && node -c routes/quotes.js && node -c routes/sales.js && node -c services/estimate-engine.js && node -c services/sales-recommendation-engine.js && node -c services/email-service.js && node -c services/sales-auth.js && node -c services/sales-email-service.js && node -c services/turnstile-service.js && node -c public/js/main.js && node -c public/js/quote-intake.js && node -c public/js/sales-coach.js && node -c public/js/lead-tracking.js && node -c scripts/run-migration.js && node -c scripts/test-sales-coach.js",
+  "start": "node server.js",
+  "dev": "node server.js",
+  "db:migrate": "node scripts/run-migration.js",
+  "sales:invite": "node scripts/create-sales-invite.js",
+  "sales:test": "node scripts/test-sales-coach.js"
+ },
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/head") %>
+
+  <body>
+    <%- include("partials/header") %>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <p class="eyebrow">Local ReadyTech support</p>
+          <h1><%= localPage.title %></h1>
+          <p><%= localPage.description %></p>
+
+          <div class="hero-actions">
+            <a href="/contact?service=<%= localPage.slug %>" class="button" data-track-lead="local-seo-contact">
+              Request Help in <%= localPage.cityName %>
+            </a>
+            <a href="/instant-quote" class="button secondary" data-track-lead="local-seo-estimate">
+              Get an Estimate
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="container section">
+        <h2>Common <%= localPage.serviceFocus %> needs in <%= localPage.cityName %></h2>
+        <div class="grid">
+          <% localPage.commonNeeds.forEach(function(need) { %>
+            <article class="card compact-card">
+              <h3><%= need %></h3>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section">
+        <article class="card featured-panel">
+          <h2>Start with a practical assessment</h2>
+          <p>
+            ReadyTech reviews the current environment, identifies uptime risks,
+            and recommends the smallest safe path to stabilize the business.
+          </p>
+          <a href="/contact?service=uptime-assessment" class="button" data-track-lead="local-seo-assessment">
+            Book a Business Uptime Assessment
+          </a>
+        </article>
+      </section>
+    </main>
+
+    <%- include("partials/footer") %>
+  </body>
+</html>
