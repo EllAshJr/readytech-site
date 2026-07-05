@@ -5,37 +5,80 @@
   <body>
     <%- include("partials/header") %>
 
+    <%
+      const formValues = typeof values === "object" && values ? values : {};
+      const valueOf = (name, fallback = "") =>
+        formValues[name] !== undefined ? formValues[name] : fallback;
+      const noticeMessage = typeof notice === "string" ? notice : "";
+      const errorMessage = typeof error === "string" ? error : "";
+    %>
+
     <main class="container section">
       <h1>Contact Private Infrastructure Support</h1>
       <p>
         Request help with managed VPN, private cloud, network monitoring,
-        business Wi-Fi, or backup internet.
+        business Wi-Fi, backup internet, or restaurant technology services.
       </p>
+
+      <% if (noticeMessage) { %>
+        <div class="quote-disclaimer" role="status"><%= noticeMessage %></div>
+      <% } %>
+
+      <% if (errorMessage) { %>
+        <div class="quote-errors" role="alert">
+          <h2>We could not send that request</h2>
+          <p><%= errorMessage %></p>
+        </div>
+      <% } %>
 
       <form action="/contact" method="POST" class="contact-form">
         <label>
           Name
-          <input type="text" name="name" required />
+          <input type="text" name="name" value="<%= valueOf('name') %>" maxlength="160" required />
         </label>
 
         <label>
           Email
-          <input type="email" name="email" required />
+          <input type="email" name="email" value="<%= valueOf('email') %>" maxlength="320" required />
+        </label>
+
+        <label>
+          Phone
+          <input type="tel" name="phone" value="<%= valueOf('phone') %>" maxlength="80" />
         </label>
 
         <label>
           City
           <select name="city">
-            <option>Austin</option>
-            <option>Manor</option>
-            <option>Houston</option>
-            <option>Other</option>
+            <% ["Austin", "Manor", "Houston", "Other"].forEach(function(city) { %>
+              <option value="<%= city %>" <%= valueOf("city") === city ? "selected" : "" %>><%= city %></option>
+            <% }); %>
+          </select>
+        </label>
+
+        <label>
+          Service interest
+          <select name="service">
+            <% [
+              ["", "Select one"],
+              ["uptime-assessment", "Business Uptime Assessment"],
+              ["network-monitoring", "Network monitoring"],
+              ["backup-internet", "Backup internet / failover"],
+              ["business-wifi", "Business Wi-Fi"],
+              ["managed-vpn", "Managed VPN / remote access"],
+              ["restaurant-technology", "Restaurant technology"],
+              ["private-cloud", "Managed backup / secure file access"],
+              ["urgent-support", "Urgent support request"],
+              ["other", "Other"]
+            ].forEach(function(option) { %>
+              <option value="<%= option[0] %>" <%= valueOf("service") === option[0] ? "selected" : "" %>><%= option[1] %></option>
+            <% }); %>
           </select>
         </label>
 
         <label>
           What do you need?
-          <textarea name="message" rows="6" required></textarea>
+          <textarea name="message" rows="6" maxlength="2000" required><%= valueOf('message') %></textarea>
         </label>
 
         <button type="submit" class="button">Send Request</button>

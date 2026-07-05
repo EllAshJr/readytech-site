@@ -1,3 +1,12 @@
+<%
+  const showConversionCta =
+    typeof currentPath === "string" && !currentPath.startsWith("/sales");
+%>
+
+<% if (showConversionCta) { %>
+  <%- include("conversion-cta") %>
+<% } %>
+
 <footer class="site-footer">
   <div class="container">
     <p>
@@ -12,6 +21,17 @@
       <a href="mailto:contact@readytechinstalls.com">contact@readytechinstalls.com</a>
     </p>
 
+    <p class="footer-links">
+      <a href="/urgent-support">Urgent Support</a>
+      <a href="/case-studies">Example Jobs</a>
+      <a href="/contact">Contact</a>
+      <a href="/instant-quote">Instant Estimate</a>
+    </p>
+
     <p>&copy; <%= new Date().getFullYear() %> ReadyTech. All rights reserved.</p>
   </div>
 </footer>
+
+<% if (showConversionCta) { %>
+  <script src="/js/lead-tracking.js" defer></script>
+<% } %>

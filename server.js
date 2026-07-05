@@ -6,6 +6,7 @@ const pricingData = require("./data/pricing");
 const siteStrategy = require("./data/site-strategy");
 const quoteRouter = require("./routes/quotes");
 const salesRouter = require("./routes/sales");
+const { sendContactRequestEmail } = require("./services/email-service");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -22,6 +23,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   res.locals.currentPath = req.path;
   next();
+});
+
+app.post("/lead-events", (req, res) => {
+  const body = req.body || {};
+
+  console.log("Lead event:", {
+    event: String(body.event || "").slice(0, 80),
+    href: String(body.href || "").slice(0, 240),
+    path: String(body.path || "").slice(0, 160),
+  });
+
+  res.sendStatus(204);
 });
 
 const services = {
@@ -105,6 +118,22 @@ app.get("/services/restaurant-technology", (req, res) => {
   });
 });
 
+app.get("/urgent-support", (req, res) => {
+  res.render("urgent-support", {
+    pageTitle: "Urgent Business Technology Support",
+    metaDescription:
+      "Request urgent help for business internet, POS, payments, Wi-Fi, VPN, backup internet, and connectivity issues affecting operations.",
+  });
+});
+
+app.get("/case-studies", (req, res) => {
+  res.render("case-studies", {
+    pageTitle: "ReadyTech Example Jobs and Use Cases",
+    metaDescription:
+      "See example ReadyTech projects for restaurant uptime, business Wi-Fi, VPN cleanup, backup internet, and managed connectivity.",
+  });
+});
+
 app.get("/services/:slug", (req, res) => {
   const restaurantService = restaurantData.seoServices[req.params.slug];
 
@@ -132,6 +161,22 @@ app.get("/services/:slug", (req, res) => {
   });
 });
 
+app.get("/locations/:city/:serviceSlug", (req, res) => {
+  const localPage = siteStrategy.localSeoPages.find(
+    (page) => page.city === req.params.city && page.slug === req.params.serviceSlug,
+  );
+
+  if (!localPage) {
+    return res.status(404).send("Local service page not found");
+  }
+
+  res.render("local-service-page", {
+    pageTitle: localPage.title,
+    metaDescription: localPage.description,
+    localPage,
+  });
+});
+
 app.get("/locations/:city", (req, res) => {
   const location = locations[req.params.city];
 
@@ -143,6 +188,8 @@ app.get("/locations/:city", (req, res) => {
     pageTitle: location.title,
     metaDescription: location.description,
     location,
+    citySlug: req.params.city,
+    localSeoPages: siteStrategy.localSeoPages.filter((page) => page.city === req.params.city),
     services,
   });
 });
@@ -168,16 +215,61 @@ app.get("/pricing", (req, res) => {
 app.get("/contact", (req, res) => {
   res.render("contact", {
     pageTitle: "Contact Private Infrastructure Support",
+    values: {
+      service: req.query.service || "",
+    },
+    notice: "",
+    error: "",
     metaDescription:
       "Request help with managed VPN, private cloud, network monitoring, business Wi‑Fi, backup internet, or restaurant technology services.",
   });
 });
 
-app.post("/contact", (req, res) => {
-  console.log("New contact form submission:");
-  console.log(req.body);
+app.post("/contact", async (req, res) => {
+  const body = req.body || {};
+  const values = {
+    name: String(body.name || "").trim(),
+    email: String(body.email || "").trim(),
+    phone: String(body.phone || "").trim(),
+    city: String(body.city || "").trim(),
+    service: String(body.service || "").trim(),
+    message: String(body.message || "").trim(),
+  };
 
-  res.send("Thank you. Your request has been received.");
+  if (!values.name || !values.email || !values.message) {
+    return res.status(400).render("contact", {
+      pageTitle: "Contact Private Infrastructure Support",
+      metaDescription:
+        "Request help with managed VPN, private cloud, network monitoring, business Wi-Fi, backup internet, or restaurant technology services.",
+      values,
+      notice: "",
+      error: "Please enter your name, email, and a short message.",
+    });
+  }
+
+  try {
+    await sendContactRequestEmail({ submission: values });
+
+    return res.render("contact", {
+      pageTitle: "Contact Private Infrastructure Support",
+      metaDescription:
+        "Request help with managed VPN, private cloud, network monitoring, business Wi-Fi, backup internet, or restaurant technology services.",
+      values: {},
+      notice: "Thank you. Your request has been received. ReadyTech will follow up soon.",
+      error: "",
+    });
+  } catch (error) {
+    console.error("Contact form email failed:", error);
+
+    return res.status(503).render("contact", {
+      pageTitle: "Contact Private Infrastructure Support",
+      metaDescription:
+        "Request help with managed VPN, private cloud, network monitoring, business Wi-Fi, backup internet, or restaurant technology services.",
+      values,
+      notice: "",
+      error: "We could not send that request. Please email contact@readytechinstalls.com directly.",
+    });
+  }
 });
 
 app.use(quoteRouter);

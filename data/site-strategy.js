@@ -233,6 +233,126 @@ const siteStrategy = {
       "Included support time and exclusions are documented in each agreement."
     ]
   },
+  "trustSignals": [
+    {
+      "title": "Business-first recommendations",
+      "description": "ReadyTech starts with the business risk first: payments, orders, staff access, guest Wi-Fi, remote work, and uptime."
+    },
+    {
+      "title": "Documented installation work",
+      "description": "Network changes are installed, tested, and documented so the business is easier to support later."
+    },
+    {
+      "title": "Monitoring-ready designs",
+      "description": "Projects are designed so critical internet, firewall, Wi-Fi, POS, and business devices can be monitored after install."
+    },
+    {
+      "title": "Restaurant-aware support",
+      "description": "ReadyTech understands restaurant realities: POS cutovers, kitchen printers, delivery apps, guest Wi-Fi, and payment uptime."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Do I need an assessment first?",
+      "answer": "For most project or managed-service work, yes. The assessment keeps scope, pricing, and recommendations tied to the actual environment."
+    },
+    {
+      "question": "Do you support restaurants only?",
+      "answer": "No. Restaurants are ReadyTech's first specialization, but the core business is uptime, secure connectivity, monitoring, and connected operations for local businesses."
+    },
+    {
+      "question": "Can you help when internet or payments are down?",
+      "answer": "ReadyTech can triage urgent connectivity issues and recommend immediate next steps, but after-hours work is scheduled or billed separately unless included in writing."
+    },
+    {
+      "question": "Can you install backup internet?",
+      "answer": "Yes. ReadyTech can plan and configure LTE, 5G, or dual-ISP failover depending on carrier availability, equipment, and business requirements."
+    },
+    {
+      "question": "Do you provide ongoing monitoring?",
+      "answer": "Yes. ReadyUptime and ReadyContinuity plans monitor covered systems and provide business-hours response, reporting, and vendor coordination."
+    }
+  ],
+  "urgentSupport": {
+    "headline": "Business technology issue interrupting operations?",
+    "description": "Use the urgent support path when internet, payments, business Wi-Fi, POS connectivity, VPN access, or critical systems are affecting revenue or operations.",
+    "situations": [
+      "Internet outage or unstable connection",
+      "POS, payment, or online ordering disruption",
+      "Guest or staff Wi-Fi outage",
+      "VPN or remote access failure",
+      "Backup internet or failover not working",
+      "After-hours cutover or recovery request"
+    ],
+    "responseNote": "ReadyTech will triage the request, confirm location and urgency, and recommend the safest next step. Emergency and after-hours work may require separate approval."
+  },
+  "exampleJobs": [
+    {
+      "title": "Restaurant payment outage prevention",
+      "business": "Independent restaurant",
+      "problem": "Payments and online orders depended on one internet connection with no tested failover.",
+      "solution": "ReadyTech assessed the network, configured backup internet, documented the setup, and prepared monitoring recommendations.",
+      "result": "The restaurant had a clearer continuity plan for payment and ordering uptime."
+    },
+    {
+      "title": "Small office VPN cleanup",
+      "business": "Professional office",
+      "problem": "Remote users had inconsistent access and the firewall configuration was not documented.",
+      "solution": "ReadyTech reviewed remote access, cleaned up VPN settings, documented users and devices, and recommended MFA where appropriate.",
+      "result": "Staff had a more supportable remote-access setup with fewer unknowns."
+    },
+    {
+      "title": "Business Wi-Fi reliability upgrade",
+      "business": "Retail or service location",
+      "problem": "Staff and customer devices were competing on one flat Wi-Fi network with dead zones.",
+      "solution": "ReadyTech designed segmented staff and guest Wi-Fi, reviewed access-point placement, and prepared monitoring options.",
+      "result": "The business had a cleaner Wi-Fi foundation for staff, guests, and operations."
+    }
+  ],
+  "localSeoPages": [
+    {
+      "city": "austin",
+      "cityName": "Austin",
+      "slug": "restaurant-it-support",
+      "title": "Restaurant IT Support in Austin, TX",
+      "description": "Restaurant network, POS connectivity, guest Wi-Fi, backup internet, and monitoring support for Austin operators.",
+      "serviceFocus": "restaurant technology and uptime",
+      "commonNeeds": [
+        "POS and payment connectivity",
+        "Guest and staff Wi-Fi separation",
+        "Backup internet planning",
+        "Kitchen printer and device monitoring"
+      ]
+    },
+    {
+      "city": "manor",
+      "cityName": "Manor",
+      "slug": "business-wifi-installation",
+      "title": "Business Wi-Fi Installation in Manor, TX",
+      "description": "Managed business Wi-Fi design, installation, guest access, segmentation, and support for Manor businesses.",
+      "serviceFocus": "business Wi-Fi installation",
+      "commonNeeds": [
+        "Reliable staff Wi-Fi",
+        "Guest Wi-Fi setup",
+        "Coverage review",
+        "Network segmentation"
+      ]
+    },
+    {
+      "city": "houston",
+      "cityName": "Houston",
+      "slug": "backup-internet-failover",
+      "title": "Backup Internet and Failover in Houston, TX",
+      "description": "Backup internet planning, LTE or 5G failover, dual-ISP readiness, and uptime support for Houston businesses.",
+      "serviceFocus": "backup internet and failover",
+      "commonNeeds": [
+        "Payment uptime",
+        "Online ordering continuity",
+        "Automatic failover",
+        "Monthly failover testing"
+      ]
+    }
+  ],
   "seoByPath": {
     "/": {
       "title": "Business Uptime & Managed Connectivity | ReadyTech",
@@ -253,6 +373,14 @@ const siteStrategy = {
     "/how-we-work": {
       "title": "Business Uptime Assessment & Service Process | ReadyTech",
       "description": "See how ReadyTech qualifies, assesses, proposes, installs, documents, monitors, and supports business-critical connectivity."
+    },
+    "/urgent-support": {
+      "title": "Urgent Business Technology Support | ReadyTech",
+      "description": "Request urgent help for business internet, POS, payments, Wi-Fi, VPN, backup internet, and connectivity issues affecting operations."
+    },
+    "/case-studies": {
+      "title": "ReadyTech Example Jobs and Use Cases",
+      "description": "See example ReadyTech projects for restaurant uptime, business Wi-Fi, VPN cleanup, backup internet, and managed connectivity."
     }
   }
 };
