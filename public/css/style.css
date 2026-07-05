@@ -1996,6 +1996,16 @@ a:hover {
   gap: 14px;
 }
 
+.site-notice {
+  margin: 24px 0 0;
+  padding: 18px 20px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.42);
+  border-radius: 12px;
+  color: #e5f7ff;
+  font-weight: 700;
+}
+
 @media (max-width: 760px) {
   .conversion-cta-inner {
     grid-template-columns: 1fr;

@@ -94,6 +94,10 @@ const locations = {
 app.get("/", (req, res) => {
   res.render("index", {
     pageTitle: "Managed VPN, Private Cloud & Secure Networking in Texas",
+    contactNotice:
+      req.query.contact === "received"
+        ? "Thank you. Your request has been received. ReadyTech will follow up soon."
+        : "",
     metaDescription:
       "Private infrastructure services for Austin, Manor, and Houston. Managed VPN, private cloud, network monitoring, Wi‑Fi, backup internet, and restaurant technology support.",
   });
@@ -250,14 +254,7 @@ app.post("/contact", async (req, res) => {
   try {
     await sendContactRequestEmail({ submission: values });
 
-    return res.render("contact", {
-      pageTitle: "Contact Private Infrastructure Support",
-      metaDescription:
-        "Request help with managed VPN, private cloud, network monitoring, business Wi-Fi, backup internet, or restaurant technology services.",
-      values: {},
-      notice: "Thank you. Your request has been received. ReadyTech will follow up soon.",
-      error: "",
-    });
+    return res.redirect("/?contact=received");
   } catch (error) {
     console.error("Contact form email failed:", error);
 

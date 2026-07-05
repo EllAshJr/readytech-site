@@ -24,6 +24,14 @@
         </div>
       </section>
 
+      <% if (typeof contactNotice === "string" && contactNotice) { %>
+        <section class="container">
+          <div class="site-notice" role="status">
+            <%= contactNotice %>
+          </div>
+        </section>
+      <% } %>
+
       <section class="container section">
         <p class="eyebrow">Three service pillars</p>
         <h2>One operating model for business-critical connectivity</h2>
