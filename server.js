@@ -4,9 +4,13 @@ const path = require("path");
 const restaurantData = require("./data/restaurant");
 const pricingData = require("./data/pricing");
 const siteStrategy = require("./data/site-strategy");
+const coIndustries = require("./data/co-industries");
 const quoteRouter = require("./routes/quotes");
 const salesRouter = require("./routes/sales");
-const { sendContactRequestEmail } = require("./services/email-service");
+const {
+  sendCoIndustryLeadEmail,
+  sendContactRequestEmail,
+} = require("./services/email-service");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -16,6 +20,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.locals.siteStrategy = siteStrategy;
+app.locals.coIndustries = coIndustries;
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
@@ -36,6 +41,198 @@ app.post("/lead-events", (req, res) => {
 
   res.sendStatus(204);
 });
+
+function cleanHost(req) {
+  return String(req.get("host") || "")
+    .split(",")[0]
+    .split(":")[0]
+    .trim()
+    .toLowerCase();
+}
+
+function findCoIndustryByHost(req) {
+  const host = cleanHost(req);
+  if (!host) return null;
+
+  return (
+    coIndustries.businesses.find((business) =>
+      business.domainCandidates.includes(host),
+    ) || null
+  );
+}
+
+function findCoIndustryBySlug(slug) {
+  return coIndustries.businesses.find((business) => business.slug === slug) || null;
+}
+
+function coIndustryLinks(req, business) {
+  const hostBusiness = findCoIndustryByHost(req);
+  const basePath = hostBusiness && hostBusiness.id === business.id ? "" : `/${business.slug}`;
+  const home = basePath || "/";
+  const coIndustriesPath = `/co-industries?from=${encodeURIComponent(business.slug)}`;
+
+  return {
+    home,
+    services: `${basePath}/services`,
+    faq: `${basePath}/faq`,
+    contact: `${basePath}/contact`,
+    readyTech: "https://readytechinstalls.com",
+    coIndustries: hostBusiness
+      ? `https://readytechinstalls.com${coIndustriesPath}`
+      : coIndustriesPath,
+  };
+}
+
+function coIndustryCanonicalUrl(req, business, pagePath = "") {
+  const hostBusiness = findCoIndustryByHost(req);
+
+  if (hostBusiness && hostBusiness.id === business.id) {
+    const host = req.get("host");
+    const protocol = req.protocol || "https";
+    return `${protocol}://${host}${pagePath || "/"}`;
+  }
+
+  return `${siteStrategy.siteUrl}/${business.slug}${pagePath}`;
+}
+
+function coIndustrySchema(business, canonicalUrl) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: business.name,
+    url: canonicalUrl,
+    telephone: business.phone,
+    description: business.description,
+    areaServed: business.serviceAreas.map((area) => ({
+      "@type": "Place",
+      name: area,
+    })),
+    parentOrganization: {
+      "@type": "Organization",
+      name: "Ready Eddy Heavy Duty Services",
+    },
+  };
+}
+
+function coIndustryPageConfig(business, page) {
+  const configs = {
+    home: {
+      view: "co-industry-home",
+      path: "",
+      title: `${business.shortName} | ${business.category}`,
+      description: business.description,
+    },
+    services: {
+      view: "co-industry-services",
+      path: "/services",
+      title: `${business.name} Services`,
+      description: business.shortDescription,
+    },
+    faq: {
+      view: "co-industry-faq",
+      path: "/faq",
+      title: `${business.name} FAQ`,
+      description: `Answers to common questions about ${business.category.toLowerCase()}.`,
+    },
+    contact: {
+      view: "co-industry-contact",
+      path: "/contact",
+      title: `Request a Quote | ${business.name}`,
+      description: `Request a quote from ${business.name}.`,
+    },
+  };
+
+  return configs[page] || configs.home;
+}
+
+function coIndustryValues(body = {}) {
+  return {
+    name: String(body.name || "").trim(),
+    email: String(body.email || "").trim(),
+    phone: String(body.phone || "").trim(),
+    city: String(body.city || "").trim(),
+    service: String(body.service || "").trim(),
+    message: String(body.message || "").trim(),
+  };
+}
+
+function renderCoIndustryPage(req, res, business, page, overrides = {}) {
+  const config = coIndustryPageConfig(business, page);
+  const links = coIndustryLinks(req, business);
+  const canonicalUrl = coIndustryCanonicalUrl(req, business, config.path);
+
+  return res.status(overrides.status || 200).render(config.view, {
+    business,
+    links,
+    pageTitle: config.title,
+    metaDescription: config.description,
+    canonicalUrl,
+    localBusinessSchema: coIndustrySchema(business, canonicalUrl),
+    values: overrides.values || {},
+    notice:
+      overrides.notice ||
+      (req.query.received === "1"
+        ? "Thank you. Your request has been received. The team will follow up soon."
+        : ""),
+    error: overrides.error || "",
+  });
+}
+
+async function handleCoIndustryContact(req, res, business) {
+  const values = coIndustryValues(req.body || {});
+
+  if (!values.name || !values.email || !values.message) {
+    return renderCoIndustryPage(req, res, business, "contact", {
+      status: 400,
+      values,
+      error: "Please enter your name, email, and a short message.",
+    });
+  }
+
+  try {
+    await sendCoIndustryLeadEmail({ business, submission: values });
+    const links = coIndustryLinks(req, business);
+    return res.redirect(`${links.contact}?received=1`);
+  } catch (error) {
+    console.error("Co-industry contact form email failed:", error);
+
+    return renderCoIndustryPage(req, res, business, "contact", {
+      status: 503,
+      values,
+      error:
+        "We could not send that request. Please call the number listed on this page.",
+    });
+  }
+}
+
+function coIndustryHostRouter(req, res, next) {
+  const business = findCoIndustryByHost(req);
+  if (!business) return next();
+
+  if (req.method === "GET" && req.path === "/") {
+    return renderCoIndustryPage(req, res, business, "home");
+  }
+
+  if (req.method === "GET" && req.path === "/services") {
+    return renderCoIndustryPage(req, res, business, "services");
+  }
+
+  if (req.method === "GET" && req.path === "/faq") {
+    return renderCoIndustryPage(req, res, business, "faq");
+  }
+
+  if (req.method === "GET" && req.path === "/contact") {
+    return renderCoIndustryPage(req, res, business, "contact");
+  }
+
+  if (req.method === "POST" && req.path === "/contact") {
+    return handleCoIndustryContact(req, res, business);
+  }
+
+  return res.status(404).send("Page not found");
+}
+
+app.use(coIndustryHostRouter);
 
 const services = {
   "managed-vpn": {
@@ -99,8 +296,59 @@ app.get("/", (req, res) => {
         ? "Thank you. Your request has been received. ReadyTech will follow up soon."
         : "",
     metaDescription:
-      "Private infrastructure services for Austin, Manor, and Houston. Managed VPN, private cloud, network monitoring, Wi‑Fi, backup internet, and restaurant technology support.",
+      "Private infrastructure services for Austin, Manor, and Houston. Managed VPN, private cloud, network monitoring, Wi-Fi, backup internet, and restaurant technology support.",
   });
+});
+
+app.get("/co-industries", (req, res) => {
+  const currentBusiness = findCoIndustryBySlug(String(req.query.from || ""));
+  const relatedBusinesses = currentBusiness
+    ? coIndustries.businesses.filter((business) => business.id !== currentBusiness.id)
+    : coIndustries.businesses;
+
+  res.render("co-industries", {
+    pageTitle: "ReadyTech Co-Industries",
+    metaDescription:
+      "Trusted co-industry businesses connected to ReadyTech for commercial kitchen exhaust cleaning and hydro-vac support.",
+    coIndustries,
+    currentBusiness,
+    relatedBusinesses,
+  });
+});
+
+app.get("/:businessSlug", (req, res, next) => {
+  const business = findCoIndustryBySlug(req.params.businessSlug);
+  if (!business) return next();
+
+  return renderCoIndustryPage(req, res, business, "home");
+});
+
+app.get("/:businessSlug/services", (req, res, next) => {
+  const business = findCoIndustryBySlug(req.params.businessSlug);
+  if (!business) return next();
+
+  return renderCoIndustryPage(req, res, business, "services");
+});
+
+app.get("/:businessSlug/faq", (req, res, next) => {
+  const business = findCoIndustryBySlug(req.params.businessSlug);
+  if (!business) return next();
+
+  return renderCoIndustryPage(req, res, business, "faq");
+});
+
+app.get("/:businessSlug/contact", (req, res, next) => {
+  const business = findCoIndustryBySlug(req.params.businessSlug);
+  if (!business) return next();
+
+  return renderCoIndustryPage(req, res, business, "contact");
+});
+
+app.post("/:businessSlug/contact", async (req, res, next) => {
+  const business = findCoIndustryBySlug(req.params.businessSlug);
+  if (!business) return next();
+
+  return handleCoIndustryContact(req, res, business);
 });
 
 app.get("/services", (req, res) => {

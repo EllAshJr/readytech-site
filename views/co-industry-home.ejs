@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/co-industry-head") %>
+
+  <body class="co-industry-site co-industry-theme-<%= business.theme %>">
+    <%- include("partials/co-industry-header") %>
+
+    <main>
+      <section class="hero co-industry-hero">
+        <div class="container">
+          <span class="brand-mark brand-mark-<%= business.theme %> hero-mark" aria-hidden="true"><%= business.mark %></span>
+          <p class="eyebrow"><%= business.category %></p>
+          <h1><%= business.headline %></h1>
+          <p><%= business.description %></p>
+
+          <div class="hero-actions">
+            <a href="<%= links.contact %>" class="button" data-track-lead="co-industry-hero-contact">
+              <%= business.primaryCta %>
+            </a>
+            <a href="<%= business.phoneHref %>" class="button secondary" data-track-lead="co-industry-hero-call">
+              <%= business.secondaryCta %>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="container section">
+        <p class="eyebrow"><%= business.byline %></p>
+        <h2>Built for customers who need dependable field service.</h2>
+        <p class="lead"><%= business.shortDescription %></p>
+
+        <% if (business.certificationStamp || business.credentialItems) { %>
+          <div class="credential-panel">
+            <% if (business.certificationStamp) { %>
+              <div class="cert-stamp"><%= business.certificationStamp %></div>
+            <% } %>
+            <% if (business.credentialItems) { %>
+              <div class="credential-grid">
+                <% business.credentialItems.forEach(function (item) { %>
+                  <div class="credential-item">
+                    <span class="mini-service-icon" aria-hidden="true"><%= item.iconLabel %></span>
+                    <span class="word-stack">
+                      <% item.label.forEach(function (word) { %>
+                        <span><%= word %></span>
+                      <% }); %>
+                    </span>
+                  </div>
+                <% }); %>
+              </div>
+            <% } %>
+            <% if (business.fireMarshalNote) { %>
+              <div class="fire-marshal-note"><%= business.fireMarshalNote %></div>
+            <% } %>
+          </div>
+        <% } %>
+
+        <div class="grid">
+          <article class="card compact-card">
+            <h3>Best fit</h3>
+            <ul>
+              <% business.idealCustomers.slice(0, 6).forEach(function (customer) { %>
+                <li><%= customer %></li>
+              <% }); %>
+            </ul>
+          </article>
+
+          <article class="card compact-card">
+            <h3>Common problems</h3>
+            <ul>
+              <% business.painPoints.slice(0, 6).forEach(function (problem) { %>
+                <li><%= problem %></li>
+              <% }); %>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="container section">
+        <p class="eyebrow">Core services</p>
+        <h2>Request the right help first, then confirm the exact scope.</h2>
+
+        <% if (business.serviceGroups) { %>
+          <div class="compliance-service-list">
+            <% business.serviceGroups.forEach(function (group) { %>
+              <article class="compliance-service-item">
+                <span class="service-icon" aria-hidden="true"><%= group.iconLabel %></span>
+                <div>
+                  <h3><%= group.title %></h3>
+                  <ul>
+                    <% group.items.forEach(function (item) { %>
+                      <li><%= item %></li>
+                    <% }); %>
+                  </ul>
+                </div>
+              </article>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <div class="grid">
+            <% business.services.slice(0, 6).forEach(function (service) { %>
+              <article class="card compact-card service-icon-card">
+                <span class="service-icon" aria-hidden="true"><%= service.iconLabel %></span>
+                <h3><%= service.title %></h3>
+                <p><%= service.description %></p>
+              </article>
+            <% }); %>
+          </div>
+        <% } %>
+
+        <div class="hero-actions">
+          <a href="<%= links.services %>" class="button secondary" data-track-lead="co-industry-services">
+            View Services
+          </a>
+        </div>
+      </section>
+
+      <section class="container section">
+        <p class="eyebrow">Trust signals</p>
+        <h2>Honest public language until every operational detail is confirmed.</h2>
+
+        <div class="grid">
+          <% business.trustSignals.forEach(function (signal) { %>
+            <article class="card compact-card">
+              <h3><%= signal.title %></h3>
+              <p><%= signal.description %></p>
+            </article>
+          <% }); %>
+        </div>
+      </section>
+
+      <section class="container section">
+        <article class="card featured-panel">
+          <p class="eyebrow">Service areas</p>
+          <h2>Austin, Manor, Houston, and surrounding areas.</h2>
+          <p>
+            Service availability, emergency response, travel, access, equipment,
+            and scheduling are confirmed during the quote process.
+          </p>
+          <ul class="inline-list">
+            <% business.serviceAreas.forEach(function (area) { %>
+              <li><%= area %></li>
+            <% }); %>
+          </ul>
+        </article>
+      </section>
+    </main>
+
+    <%- include("partials/co-industry-footer") %>
+  </body>
+</html>

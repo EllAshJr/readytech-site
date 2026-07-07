@@ -1,0 +1,50 @@
+<section class="conversion-cta co-industry-cta">
+  <div class="container conversion-cta-inner">
+    <div>
+      <span class="brand-mark brand-mark-<%= business.theme %>" aria-hidden="true"><%= business.mark %></span>
+      <p class="eyebrow"><%= business.shortName %></p>
+      <h2>Ready to request service?</h2>
+      <p>
+        Share the service needed, city, timing, and any urgency. The team can
+        confirm scope, scheduling, and next steps before work begins.
+      </p>
+    </div>
+
+    <div class="conversion-cta-actions">
+      <a href="<%= links.contact %>" class="button" data-track-lead="co-industry-footer-contact">
+        <%= business.primaryCta %>
+      </a>
+      <a href="<%= business.phoneHref %>" class="button secondary" data-track-lead="co-industry-footer-call">
+        Call <%= business.phone %>
+      </a>
+      <a href="<%= links.readyTech %>" class="button secondary" data-track-lead="co-industry-footer-readytech">
+        Visit ReadyTech
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer co-industry-footer">
+  <div class="container">
+    <p>
+      <strong><%= business.name %></strong> <%= business.byline %>.
+      Serving <%= business.serviceAreas.join(", ") %>.
+    </p>
+
+    <p>
+      Phone:
+      <a href="<%= business.phoneHref %>"><%= business.phone %></a>
+    </p>
+
+    <p class="footer-links">
+      <a href="<%= links.services %>">Services</a>
+      <a href="<%= links.faq %>">FAQ</a>
+      <a href="<%= links.contact %>">Request Quote</a>
+      <a href="<%= links.coIndustries %>">ReadyTech Co-Industries</a>
+    </p>
+
+    <p>&copy; <%= new Date().getFullYear() %> <%= business.name %>. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="/js/lead-tracking.js" defer></script>

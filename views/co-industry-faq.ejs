@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/co-industry-head") %>
+
+  <body class="co-industry-site co-industry-theme-<%= business.theme %>">
+    <%- include("partials/co-industry-header") %>
+
+    <main class="container section">
+      <span class="brand-mark brand-mark-<%= business.theme %>" aria-hidden="true"><%= business.mark %></span>
+      <p class="eyebrow"><%= business.shortName %></p>
+      <h1>Frequently asked questions</h1>
+      <p class="lead">
+        These answers are written to help customers understand the service
+        before requesting a quote. Final scope depends on the site, urgency,
+        access, and confirmed service details.
+      </p>
+
+      <div class="faq-list">
+        <% business.faqs.forEach(function (faq) { %>
+          <details class="faq-item">
+            <summary><%= faq.question %></summary>
+            <p><%= faq.answer %></p>
+          </details>
+        <% }); %>
+      </div>
+
+      <section class="section">
+        <article class="card featured-panel">
+          <h2>Still have questions?</h2>
+          <p>Send the request details and the team can confirm fit, timing, and next steps.</p>
+          <a href="<%= links.contact %>" class="button" data-track-lead="co-industry-faq-contact">
+            Request Quote
+          </a>
+        </article>
+      </section>
+    </main>
+
+    <%- include("partials/co-industry-footer") %>
+  </body>
+</html>
