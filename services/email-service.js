@@ -93,9 +93,10 @@ function list(items) {
   return `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
 }
 
-async function sendEmail({ to, subject, html, replyTo, idempotencyKey }) {
+async function sendEmail({ to, subject, html, replyTo, idempotencyKey, from }) {
   const client = getResend();
-  const from = process.env.QUOTE_FROM_EMAIL || "ReadyTech Estimates <onboarding@resend.dev>";
+  const fromAddress =
+    from || process.env.QUOTE_FROM_EMAIL || "ReadyTech Estimates <onboarding@resend.dev>";
 
   if (!client) {
     if (process.env.NODE_ENV === "production") {
@@ -107,7 +108,7 @@ async function sendEmail({ to, subject, html, replyTo, idempotencyKey }) {
 
   const { data, error } = await client.emails.send(
     {
-      from,
+      from: fromAddress,
       to: Array.isArray(to) ? to : [to],
       replyTo: replyTo || process.env.QUOTE_REPLY_TO || "contact@readytechinstalls.com",
       subject,
@@ -302,10 +303,55 @@ async function sendContactRequestEmail({ submission }) {
   });
 }
 
+async function sendCoIndustryLeadEmail({ business, submission }) {
+  const leadEmail = process.env.CO_INDUSTRY_LEAD_EMAIL || process.env.OWNER_EMAIL;
+
+  if (!leadEmail && process.env.NODE_ENV === "production") {
+    throw new Error("CO_INDUSTRY_LEAD_EMAIL or OWNER_EMAIL is not configured.");
+  }
+
+  const subject = `${business.shortName} quote request: ${
+    submission.service || "General request"
+  }`;
+  const body = `
+    <p>A new quote/contact request was submitted for <strong>${escapeHtml(
+      business.name,
+    )}</strong>.</p>
+    <p><strong>Business:</strong> ${escapeHtml(business.name)}<br>
+       <strong>Byline:</strong> ${escapeHtml(business.byline)}<br>
+       <strong>Requested service:</strong> ${escapeHtml(
+         submission.service || "Not provided",
+       )}<br>
+       <strong>Name:</strong> ${escapeHtml(submission.name)}<br>
+       <strong>Email:</strong> ${escapeHtml(submission.email)}<br>
+       <strong>Phone:</strong> ${escapeHtml(submission.phone || "Not provided")}<br>
+       <strong>City / job location:</strong> ${escapeHtml(
+         submission.city || "Not provided",
+       )}</p>
+    <h3>Message</h3>
+    <p>${escapeHtml(submission.message).replace(/\n/g, "<br>")}</p>
+  `;
+
+  if (!leadEmail) {
+    console.log(`[DEV CO-INDUSTRY EMAIL] ${subject} -> CO_INDUSTRY_LEAD_EMAIL not set`);
+    console.log(JSON.stringify({ business: business.name, submission }, null, 2));
+    return { skipped: true, id: null };
+  }
+
+  return sendEmail({
+    to: leadEmail,
+    subject,
+    html: emailShell(`New ${business.shortName} request`, body),
+    replyTo: submission.email || process.env.QUOTE_REPLY_TO,
+    from: process.env.CO_INDUSTRY_FROM_EMAIL,
+  });
+}
+
 module.exports = {
   sendInitialEstimateEmails,
   sendDecisionEmails,
   sendCallRequestEmails,
+  sendCoIndustryLeadEmail,
   sendContactRequestEmail,
   decisionUrl,
 };

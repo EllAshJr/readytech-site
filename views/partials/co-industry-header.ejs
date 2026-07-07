@@ -1,0 +1,20 @@
+<header class="site-header co-industry-header">
+  <div class="container nav nav-title-logo">
+    <a href="<%= links.home %>" class="brand-title" aria-label="<%= business.name %> home">
+      <span class="brand-ready"><%= business.brandLead %></span><span class="brand-tech"><%= business.brandRest %></span>
+    </a>
+
+    <nav class="main-nav" aria-label="<%= business.name %> navigation">
+      <a href="<%= links.home %>">Home</a>
+      <a href="<%= links.services %>">Services</a>
+      <a href="<%= links.faq %>">FAQ</a>
+      <a href="<%= links.contact %>">Request Quote</a>
+      <a href="<%= links.coIndustries %>">Co-Industries</a>
+      <a href="<%= business.phoneHref %>" class="button nav-assessment-button">
+        Call <%= business.phone %>
+      </a>
+    </nav>
+
+    <div class="brand-balance" aria-hidden="true"></div>
+  </div>
+</header>

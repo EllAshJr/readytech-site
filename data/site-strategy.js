@@ -381,6 +381,10 @@ const siteStrategy = {
     "/case-studies": {
       "title": "ReadyTech Example Jobs and Use Cases",
       "description": "See example ReadyTech projects for restaurant uptime, business Wi-Fi, VPN cleanup, backup internet, and managed connectivity."
+    },
+    "/co-industries": {
+      "title": "Heavy Duty Co-Industry Services | ReadyTech",
+      "description": "ReadyTech co-industry heavy duty services for commercial kitchen exhaust cleaning and hydro-vac support across Austin, Manor, Houston, and surrounding areas."
     }
   }
 };

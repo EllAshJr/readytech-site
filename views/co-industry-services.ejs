@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("partials/co-industry-head") %>
+
+  <body class="co-industry-site co-industry-theme-<%= business.theme %>">
+    <%- include("partials/co-industry-header") %>
+
+    <main class="container section">
+      <span class="brand-mark brand-mark-<%= business.theme %>" aria-hidden="true"><%= business.mark %></span>
+      <p class="eyebrow"><%= business.category %></p>
+      <h1><%= business.shortName %> services</h1>
+      <p class="lead"><%= business.servicesIntro %></p>
+
+      <% if (business.serviceGroups) { %>
+        <div class="compliance-service-list">
+          <% business.serviceGroups.forEach(function (group) { %>
+            <article class="compliance-service-item">
+              <span class="service-icon" aria-hidden="true"><%= group.iconLabel %></span>
+              <div>
+                <h2><%= group.title %></h2>
+                <ul>
+                  <% group.items.forEach(function (item) { %>
+                    <li><%= item %></li>
+                  <% }); %>
+                </ul>
+              </div>
+            </article>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="grid co-industry-services-grid">
+          <% business.services.forEach(function (service) { %>
+            <article class="card compact-card service-icon-card">
+              <span class="service-icon" aria-hidden="true"><%= service.iconLabel %></span>
+              <h2><%= service.title %></h2>
+              <p><%= service.description %></p>
+            </article>
+          <% }); %>
+        </div>
+      <% } %>
+
+      <section class="section">
+        <article class="card featured-panel">
+          <p class="eyebrow">Quote-first process</p>
+          <h2>Scope gets confirmed before the job is promised.</h2>
+          <p>
+            Customers should share the service needed, city, urgency, site
+            access, timing, and any known constraints. The owner can confirm
+            crew availability, exact service scope, and whether the request is a
+            good fit.
+          </p>
+          <a href="<%= links.contact %>" class="button" data-track-lead="co-industry-services-contact">
+            <%= business.primaryCta %>
+          </a>
+        </article>
+      </section>
+    </main>
+
+    <%- include("partials/co-industry-footer") %>
+  </body>
+</html>
