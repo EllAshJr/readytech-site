@@ -11,21 +11,25 @@ const coIndustries = {
     description:
       "ReadyTech focuses on business uptime, connectivity, monitoring, and connected operations. Through related Ready-aligned service businesses, customers can also connect with commercial kitchen exhaust cleaning and hydro-vac support.",
     positioning:
-      "ReadyTech keeps businesses connected and operating. Ready Kitchen Exhaust Hood Cleaning supports restaurants and commercial kitchens through a quote-first cleaning process. Ready Hydro-Vac supports contractor and commercial job requests by scope review, access details, and quote.",
+      "ReadyTech keeps businesses connected and operating. Ready Eddy Kitchen Exhaust Cleaning supports restaurants and commercial kitchens through a quote-first cleaning process. Ready Hydro-Vac supports contractor and commercial job requests by scope review, access details, and quote.",
   },
   businesses: [
     {
       id: "kitchen-exhaust",
       slug: "ready-kitchen-exhaust",
-      name: "Ready Kitchen Exhaust Hood Cleaning",
-      shortName: "Ready Kitchen Exhaust",
-      brandLead: "Ready",
+      name: "Ready Eddy Kitchen Exhaust Cleaning",
+      shortName: "Ready Eddy Kitchen Exhaust Cleaning",
+      brandLead: "Ready Eddy",
       brandRest: "Kitchen Exhaust",
       byline: "By Ready Eddy Heavy Duty Services",
       category: "Commercial kitchen exhaust cleaning",
       theme: "kitchen",
       mark: "KE",
-      certificationStamp: "NFPA 96 Certified",
+      certificationStamp: {
+        primary: "NFPA 96",
+        secondary: "Certified",
+        ariaLabel: "NFPA 96 Certified",
+      },
       primaryDomain: "readykitchenexhaust.com",
       domainCandidates: [
         "readykitchenexhaust.com",
@@ -44,12 +48,18 @@ const coIndustries = {
       ],
       primaryCta: "Request Hood Cleaning Quote",
       secondaryCta: "Call Now",
-      headline:
-        "Kitchen exhaust cleaning for commercial kitchens.",
+      headline: "Ready Eddy Kitchen Exhaust Cleaning",
       description:
-        "Ready Kitchen Exhaust Hood Cleaning helps restaurants and commercial kitchens reduce grease buildup and prepare for inspection conversations through a quote-first scope review.",
+        "Ready Eddy Kitchen Exhaust Cleaning helps restaurants and commercial kitchens reduce grease buildup and prepare for inspection conversations through a quote-first scope review.",
       shortDescription:
         "Commercial kitchen hood, exhaust, filter, fan, and grease-control cleaning support for restaurants and commercial kitchens.",
+      heroLogo: "/images/co-industries/ready-eddy-logo.png",
+      serviceCredentials: [
+        "NFPA 96 Certified",
+        "Confined space certified",
+        "Bio-Degradable Degreaser",
+        "Fire Marshal Reporting",
+      ],
       idealCustomers: [
         "Restaurants",
         "Fast-casual kitchens",
@@ -182,7 +192,7 @@ const coIndustries = {
         {
           title: "Inspection-aware wording",
           description:
-            "Ready Kitchen Exhaust helps reduce grease buildup and prepare for inspection conversations with landlords, insurers, and local authorities. Final requirements should be confirmed with the proper authority.",
+            "Ready Eddy Kitchen Exhaust Cleaning helps reduce grease buildup and prepare for inspection conversations with landlords, insurers, and local authorities. Final requirements should be confirmed with the proper authority.",
         },
         {
           title: "Documentation mindset",
@@ -242,7 +252,11 @@ const coIndustries = {
       category: "Hydro-vac and vacuum excavation support",
       theme: "hydro",
       mark: "HV",
-      certificationStamp: "Licensed Insured Bonded",
+      certificationStamp: {
+        primary: "Licensed",
+        secondary: "Insured & Bonded",
+        ariaLabel: "Licensed, insured, and bonded",
+      },
       fireMarshalNote: "24/7 emergency requests reviewed by scope, access, and availability",
       primaryDomain: "readyhydrovac.com",
       domainCandidates: [
@@ -268,6 +282,12 @@ const coIndustries = {
         "Ready Hydro-Vac accepts hydro-vac and vacuum service quote requests for contractor, commercial, construction, utility, drainage, and industrial job needs.",
       shortDescription:
         "Hydro-vac and vacuum service quote requests for contractors, commercial sites, utilities, drainage needs, and jobsite support.",
+      heroLogo: "/images/co-industries/ready-hydro-vac-logo.png",
+      serviceCredentials: [
+        "NFPA 96 Certified",
+        "Confined space certified",
+        "Fire Marshal Reporting",
+      ],
       idealCustomers: [
         "Utility contractors",
         "General contractors",
