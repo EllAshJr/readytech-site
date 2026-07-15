@@ -8,6 +8,14 @@
     <main>
       <section class="hero co-industry-hero">
         <div class="container">
+          <% if (business.heroLogo) { %>
+            <img
+              class="co-industry-hero-logo"
+              src="<%= business.heroLogo %>"
+              alt=""
+              aria-hidden="true"
+            />
+          <% } %>
           <span class="brand-mark brand-mark-<%= business.theme %> hero-mark" aria-hidden="true"><%= business.mark %></span>
           <p class="eyebrow"><%= business.category %></p>
           <h1><%= business.headline %></h1>
@@ -32,7 +40,20 @@
         <% if (business.certificationStamp || business.credentialItems) { %>
           <div class="credential-panel">
             <% if (business.certificationStamp) { %>
-              <div class="cert-stamp"><%= business.certificationStamp %></div>
+              <% if (typeof business.certificationStamp === "object") { %>
+                <div
+                  class="cert-stamp"
+                  role="img"
+                  aria-label="<%= business.certificationStamp.ariaLabel %>"
+                >
+                  <span class="cert-stamp-stars" aria-hidden="true">&#9733; &#9733; &#9733; &#9733;</span>
+                  <span class="cert-stamp-primary"><%= business.certificationStamp.primary %></span>
+                  <span class="cert-stamp-secondary"><%= business.certificationStamp.secondary %></span>
+                  <span class="cert-stamp-stars cert-stamp-stars-bottom" aria-hidden="true">&#9733; &#9733; &#9733;</span>
+                </div>
+              <% } else { %>
+                <div class="cert-stamp"><%= business.certificationStamp %></div>
+              <% } %>
             <% } %>
             <% if (business.credentialItems) { %>
               <div class="credential-grid">

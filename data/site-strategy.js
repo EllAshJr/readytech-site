@@ -5,7 +5,12 @@ const siteStrategy = {
     "category": "Business uptime and connected operations",
     "hero": "Technology that keeps your business connected, protected, and ready.",
     "positioning": "ReadyTech installs and manages the connectivity local businesses depend on—secure networks, business Wi-Fi, remote access, monitoring, internet failover, backups, and restaurant technology.",
-    "tagline": "Installed right. Monitored continuously. Ready when business depends on it."
+    "tagline": "Installed right. Monitored continuously. Ready when business depends on it.",
+    "serviceCredentials": [
+      "Industry-Certified Technicians",
+      "Vetted and Experienced Technicians",
+      "Infrastructure as a Service (IaaS)"
+    ]
   },
   "ctas": {
     "primary": {
@@ -133,7 +138,7 @@ const siteStrategy = {
     {
       "id": "readyconnect-foundation",
       "title": "ReadyConnect Foundation",
-      "price": "$1,500–$4,500",
+      "price": "$1.5K–$4.5K",
       "priceNote": "Project pricing, plus hardware",
       "description": "A clean, secure network foundation that prepares the business for monitoring and managed support.",
       "includes": [

@@ -1,4 +1,4 @@
-<header class="site-header">
+<header class="site-header readytech-header">
   <div class="container nav nav-title-logo">
     <a href="/" class="brand-title" aria-label="ReadyTech home">
       <span class="brand-ready">Ready</span><span class="brand-tech">Tech</span>
@@ -7,12 +7,9 @@
     <nav class="main-nav" aria-label="Primary navigation">
       <a href="/">Home</a>
       <a href="/services">Services</a>
-      <a href="/services/restaurant-technology">Restaurants</a>
-      <a href="/urgent-support">Urgent Help</a>
-      <a href="/co-industries">Co-Industries</a>
       <a href="/how-we-work">How It Works</a>
       <a href="/pricing">Pricing</a>
-      <a href="/#service-areas">Service Areas</a>
+      <a href="/co-industries">Co-Industries</a>
 
       <a href="<%= siteStrategy.ctas.primary.href %>" class="button nav-assessment-button">
         Book Assessment
@@ -22,3 +19,18 @@
     <div class="brand-balance" aria-hidden="true"></div>
   </div>
 </header>
+
+<% if (Array.isArray(siteStrategy.brand.serviceCredentials) && siteStrategy.brand.serviceCredentials.length) { %>
+  <aside class="readytech-credential-strip" aria-label="Service credentials">
+    <div class="container">
+      <ul>
+        <% siteStrategy.brand.serviceCredentials.forEach(function (credential) { %>
+          <li>
+            <span class="credential-check" aria-hidden="true">&#10003;</span>
+            <%= credential %>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+  </aside>
+<% } %>

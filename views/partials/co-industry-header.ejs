@@ -18,3 +18,18 @@
     <div class="brand-balance" aria-hidden="true"></div>
   </div>
 </header>
+
+<% if (Array.isArray(business.serviceCredentials) && business.serviceCredentials.length) { %>
+  <aside class="co-industry-credential-strip" aria-label="Service credentials">
+    <div class="container">
+      <ul>
+        <% business.serviceCredentials.forEach(function (credential) { %>
+          <li>
+            <span class="credential-check" aria-hidden="true">&#10003;</span>
+            <%= credential %>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+  </aside>
+<% } %>
