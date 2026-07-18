@@ -2426,11 +2426,11 @@ body.co-industry-theme-kitchen {
 
 @media (max-width: 760px) {
   .co-industry-hero-logo {
-    top: 18px;
+    top: 32px;
     right: -6px;
     width: 110px;
     opacity: 0.26;
-    transform: none;
+    transform: translateY(-50%);
   }
 
   .co-industry-theme-hydro .co-industry-hero-logo {
@@ -3117,6 +3117,16 @@ li,
     width: 54px;
     height: 54px;
     font-size: 0.9rem;
+  }
+
+  .readytech-hero-logo {
+    top: 42%;
+    right: 8px;
+    transform: translateY(-50%);
+  }
+
+  .co-industry-hero-logo {
+    top: 27px;
   }
 
   .credential-panel,

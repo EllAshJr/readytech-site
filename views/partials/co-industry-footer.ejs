@@ -17,8 +17,11 @@
       <a href="<%= business.phoneHref %>" class="button secondary" data-track-lead="co-industry-footer-call">
         Call <%= business.phone %>
       </a>
-      <a href="<%= links.readyTech %>" class="button secondary" data-track-lead="co-industry-footer-readytech">
-        Visit ReadyTech
+      <a
+        href="<%= business.theme === 'kitchen' ? '/services/restaurant-technology' : links.readyTech %>"
+        class="button secondary"
+        data-track-lead="co-industry-footer-readytech">
+        <%= business.theme === "kitchen" ? "Need Restaurant Technology?" : "Visit ReadyTech" %>
       </a>
     </div>
   </div>

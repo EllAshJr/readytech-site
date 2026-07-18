@@ -1,7 +1,7 @@
 "use strict";
 
-const sharedPhone = "432-416-2838";
-const sharedPhoneHref = "tel:+14324162838";
+const sharedPhone = "346-552-4831";
+const sharedPhoneHref = "tel:+13465524831";
 
 const coIndustries = {
   parent: {
